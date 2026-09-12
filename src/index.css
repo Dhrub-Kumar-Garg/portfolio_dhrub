@@ -172,7 +172,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
   top: 0; left: 0;
   width: 40px; height: 40px;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 999999;
   transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;
@@ -1279,6 +1279,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 
 .terminal-window.closed {
   opacity: 0;
+  transform: scale(0.96);
   pointer-events: none;
   position: absolute;
 }
@@ -1299,14 +1300,22 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 [data-theme='light'] .terminal-header { background: #e5e5eb; border-bottom: 1px solid rgba(0,0,0,0.1); }
 .terminal-buttons { display: flex; gap: 8px; align-items: center; position: relative; }
 .terminal-buttons button { 
-  width: 12px; height: 12px; border-radius: 50%; display: block; 
+  width: 12px; height: 12px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.2); 
   border: none; padding: 0; cursor: pointer;
-  transition: transform 0.2s, opacity 0.2s;
+  transition: opacity 0.2s;
   outline-offset: 2px;
 }
-.terminal-buttons button:hover { transform: scale(1.15); opacity: 0.9; }
-.terminal-buttons button:active { transform: scale(0.95); }
+.terminal-buttons button svg {
+  opacity: 0;
+  transition: opacity 0.2s;
+  stroke: rgba(0,0,0,0.6);
+}
+.terminal-buttons:hover button svg {
+  opacity: 1;
+}
+.terminal-buttons button:hover { opacity: 0.9; }
+.terminal-buttons button:active { opacity: 0.7; }
 .btn-close { background: #ff5f56; }
 .btn-min { background: #ffbd2e; }
 .btn-max { background: #27c93f; }

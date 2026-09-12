@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -14,6 +14,16 @@ function CRTTerminal() {
   // New States
   const [windowState, setWindowState] = useState('open'); // 'open', 'minimized', 'maximized', 'closed'
   const [showHint, setShowHint] = useState(true);
+  const isNearBottomRef = useRef(true);
+
+  // Auto-hide hint after 5 seconds
+  useEffect(() => {
+    if (showHint) {
+      const timer = setTimeout(() => setShowHint(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showHint]);
+
   const [history, setHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
 
@@ -113,18 +123,19 @@ function CRTTerminal() {
     clear: () => '__CLEAR__',
   };
 
-  // Smart Auto-Scroll Logic
-  const scrollToBottomIfNear = useCallback(() => {
-    if (!bodyRef.current) return;
+  // Smart Auto-Scroll Logic: Record scroll intent before update, apply after render.
+  const checkIsNearBottom = () => {
+    if (!bodyRef.current) return true;
     const { scrollTop, scrollHeight, clientHeight } = bodyRef.current;
-    
-    // If user is within 100px of the bottom, auto-scroll. Otherwise, preserve their scroll.
-    const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
-    
-    if (isNearBottom) {
-      bodyRef.current.scrollTop = scrollHeight;
+    return scrollHeight - scrollTop - clientHeight < 100;
+  };
+
+  useLayoutEffect(() => {
+    if (isNearBottomRef.current && bodyRef.current) {
+      // Use smooth scrolling if preferred, but instant is often better for terminal appending
+      bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
     }
-  }, []);
+  }, [lines]);
 
   const handleInteraction = () => {
     if (showHint) setShowHint(false);
@@ -152,13 +163,13 @@ function CRTTerminal() {
         }
       }
   
+      // Record if we should scroll to bottom right before the lines are added
+      isNearBottomRef.current = checkIsNearBottom();
+
       setLines((prev) => (cmd === 'clear' ? [] : [...prev, ...newLines]));
       setHistory((prev) => [raw, ...prev]);
       setHistoryIndex(-1);
       setInput('');
-      
-      // Attempt smart scroll after state updates
-      setTimeout(scrollToBottomIfNear, 50);
       
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
@@ -218,9 +229,23 @@ function CRTTerminal() {
           <div className={`terminal-window ${windowState}`}>
             <div className="terminal-header">
               <div className="terminal-buttons">
-                <button className="btn-close" aria-label="Close Terminal" onClick={closeTerminal} />
-                <button className="btn-min" aria-label="Minimize Terminal" onClick={toggleMinimize} />
-                <button className="btn-max" aria-label="Maximize Terminal" onClick={toggleMaximize} />
+                <button className="btn-close" aria-label="Close Terminal" onClick={closeTerminal}>
+                  <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <line x1="2" y1="2" x2="12" y2="12" />
+                    <line x1="12" y1="2" x2="2" y2="12" />
+                  </svg>
+                </button>
+                <button className="btn-min" aria-label="Minimize Terminal" onClick={toggleMinimize}>
+                  <svg width="8" height="2" viewBox="0 0 14 2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <line x1="2" y1="1" x2="12" y2="1" />
+                  </svg>
+                </button>
+                <button className="btn-max" aria-label="Maximize Terminal" onClick={toggleMaximize}>
+                  <svg width="8" height="8" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <line x1="7" y1="2" x2="7" y2="12" />
+                    <line x1="2" y1="7" x2="12" y2="7" />
+                  </svg>
+                </button>
                 
                 {showHint && (
                   <div className="terminal-hint">

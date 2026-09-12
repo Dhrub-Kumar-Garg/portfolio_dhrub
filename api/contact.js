@@ -1,6 +1,6 @@
-import { Resend } from 'resend';
+const { Resend } = require('resend');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Add CORS headers for local development if needed, though vite proxies it
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');

@@ -802,10 +802,7 @@ function Hero({ loaded, themeMode }) {
             and solving problems that create real impact.
           </p>
         </div>
-        <div className="hero-actions">
-          <Magnetic><a href="#projects" className="btn-main" style={{ transform: 'translateY(120%)' }}>View Work →</a></Magnetic>
-          <Magnetic><a href="#contact" className="btn-outline" style={{ transform: 'translateY(120%)' }}>Get in Touch</a></Magnetic>
-        </div>
+        
       </div>
 
       <div className="scroll-cue">
