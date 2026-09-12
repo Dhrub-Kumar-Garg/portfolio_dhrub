@@ -47,7 +47,7 @@ function Experience({ data }) {
   return (
     <section className="sect sect-experience" id="experience" ref={ref}>
       <p className="sect-label reveal">03 — Experience</p>
-      <h2 className="sect-heading reveal">Where I've <em className="serif">worked.</em></h2>
+      <h2 className="sect-heading reveal">Where I’ve <em className="serif">contributed.</em></h2>
       {data.map((exp, i) => (
         <div className="exp-item reveal" key={i}>
           <span className="exp-date">{exp.date}</span>

@@ -72,12 +72,12 @@ function About() {
         </div>
         <div className="about-meta reveal">
           {[
-            ['Location', 'India'],
-            ['Education', 'B.Tech IT, VIT Vellore'],
-            ['Focus', 'Full Stack & System Design'],
-            ['Currently', 'B.Tech IT Student'],
-            ['Languages', 'JS, TS, Python, C++, Java'],
-            ['Interests', 'Open Source, UI/UX'],
+            ['LOCATION', 'Vellore, Tamil Nadu'],
+            ['EDUCATION', 'B.Tech IT · VIT Vellore'],
+            ['FOCUS', 'Full-Stack Engineering & Systems'],
+            ['CURRENTLY', 'B.Tech IT · 2024–2028'],
+            ['LANGUAGES', 'C++ · JavaScript · C · Java · Python'],
+            ['INTERESTS', 'Software Engineering · System Design · Problem Solving'],
           ].map(([k, v]) => (
             <div className="meta-row" key={k}>
               <span className="meta-k">{k}</span>

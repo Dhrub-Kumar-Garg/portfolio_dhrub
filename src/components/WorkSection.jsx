@@ -183,7 +183,7 @@ export default function WorkSection({ data = [] }) {
         end: `+=${SCROLL_PX}`,
         pin: true,
         scrub: 1.2, // Silky smooth inertia on scroll
-        anticipatePin: 1,
+        // anticipatePin: 1, // Removed to fix Lenis jump bug
         invalidateOnRefresh: true,
       },
     });

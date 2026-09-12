@@ -93,7 +93,25 @@
       ]
     }
   ],
-  "experience": [],
+  "experience": [
+    {
+      "date": "MAY 2026 — PRESENT // REMOTE",
+      "role": "Open Source Contributor",
+      "org": "GSSoC 2026",
+      "desc": [
+        "Contributing to open-source projects through GitHub-based development workflows, collaborating with mentors and maintainers across issues, discussions, and feature development.",
+        "CONTRIBUTIONS: GitHub · Issue Resolution · Feature Development · Collaboration"
+      ]
+    },
+    {
+      "date": "MAR 2026 — PRESENT // VELLORE, INDIA",
+      "role": "Core Member",
+      "org": "INNOVATORS QUEST (VIT)",
+      "desc": [
+        "Working on student-led innovation projects and contributing to technical solutions while collaborating with the wider innovation community."
+      ]
+    }
+  ],
   "certifications": [],
   "timeline": [
     {

@@ -3,7 +3,6 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { GitHubCalendar } from 'react-github-calendar';
 
 import portfolioData from '../data/portfolio.json';
 import DinoGame from './components/DinoGame';
@@ -13,13 +12,17 @@ import './index.css';
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 ScrollTrigger.config({ ignoreMobileResize: true });
-ScrollTrigger.normalizeScroll(true);
+// ScrollTrigger.normalizeScroll(true); // Removed to prevent conflict with Lenis and scroll jumping
 
 const SKILLS = [
-  'PyTorch', '◆', 'TensorFlow', '◆', 'Transformers', '◆', 'Computer Vision', '◆',
-  'NLP', '◆', 'Docker', '◆', 'Kafka', '◆', 'Python', '◆', 'React', '◆',
-  'Node.js', '◆', 'Git', '◆', 'Linux', '◆', 'MLOps', '◆', 'Deep Learning', '◆',
-  'GANs', '◆', 'BERT', '◆', 'OpenCV', '◆', 'Scikit-learn', '◆',
+  'C++', '◆', 'Python', '◆', 'JavaScript', '◆', 'Java', '◆',
+  'React', '◆', 'Next.js', '◆', 'Node.js', '◆', 'Tailwind CSS', '◆',
+  'HTML', '◆', 'CSS', '◆', 'MySQL', '◆', 'PostgreSQL', '◆',
+  'Oracle SQL', '◆', 'Firebase', '◆', 'SQLite', '◆', 'AWS', '◆',
+  'Docker', '◆', 'Git', '◆', 'GitHub', '◆', 'Postman', '◆',
+  'OAuth', '◆', 'WCAG 2.1 AA', '◆', 'WAI-ARIA', '◆',
+  'Computer Networks', '◆', 'Multithreading', '◆', 'Embedded C', '◆',
+  'IoT', '◆'
 ];
 
 import imgTransformer from './assets/images/transformer_pixel.png';
@@ -33,12 +36,12 @@ const PROJECT_IMAGES = {
 };
 
 const ASCII_ART = [
-  '  █████╗  █████╗ ██████╗ ██╗██╗   ██╗',
-  ' ██╔══██╗██╔══██╗██╔══██╗██║╚██╗ ██╔╝',
-  ' ███████║███████║██║  ██║██║ ╚████╔╝ ',
-  ' ██╔══██║██╔══██║██║  ██║██║  ╚██╔╝  ',
-  ' ██║  ██║██║  ██║██████╔╝██║   ██║   ',
-  ' ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚═╝   ╚═╝   ',
+  ' ██████╗ ██╗  ██╗██████╗ ██╗   ██╗██████╗ ',
+  ' ██╔══██╗██║  ██║██╔══██╗██║   ██║██╔══██╗',
+  ' ██║  ██║███████║██████╔╝██║   ██║██████╔╝',
+  ' ██║  ██║██╔══██║██╔══██╗██║   ██║██╔══██╗',
+  ' ██████╔╝██║  ██║██████╔╝╚██████╔╝██████╔╝',
+  ' ╚═════╝ ╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═════╝ ',
 ];
 
 /* ═══ SPLIT WORD REVEAL HELPER ═══ */
@@ -61,7 +64,7 @@ const SplitWordReveal = ({ text, className = '' }) => {
 /* ═══ SECTION TRANSITION WRAPPER ═══ */
 const SectionTransition = ({ children, zIndex, glass = false }) => {
   const ref = useRef(null);
-  
+
   useGSAP(() => {
     const el = ref.current;
     if (!el) return;
@@ -124,7 +127,7 @@ function SectionInterstitial({ tag, title, sub, diag, mode = 'scramble' }) {
       tl.to(titleEl, {
         scale: 1.8, opacity: 0, filter: 'blur(25px)', letterSpacing: '0.15em', duration: 0.35, ease: 'power2.in'
       }, 0.65);
-    } 
+    }
     else if (mode === 'slice') {
       // MODE 2: 3D Character Flip & Explosive Scatter
       if (chars.length) {
@@ -139,7 +142,7 @@ function SectionInterstitial({ tag, title, sub, diag, mode = 'scramble' }) {
           tl.to(c, { xPercent: xDir, yPercent: yDir, opacity: 0, rotateZ: 45, duration: 0.35, ease: 'power3.in' }, 0.65);
         });
       }
-    } 
+    }
     else if (mode === 'curtain') {
       // MODE 3: High-Contrast Solid Shutter Inversion (Double-door camera shutter)
       tl.fromTo(el,
@@ -150,7 +153,7 @@ function SectionInterstitial({ tag, title, sub, diag, mode = 'scramble' }) {
       tl.to(el, {
         clipPath: 'inset(0 50% 0 50%)', opacity: 0, duration: 0.35, ease: 'power3.in'
       }, 0.65);
-    } 
+    }
     else if (mode === 'tunnel') {
       // MODE 4: 3D Warp Drive Perspective Zoom (Passes Through Camera)
       tl.fromTo(titleEl,
@@ -161,7 +164,7 @@ function SectionInterstitial({ tag, title, sub, diag, mode = 'scramble' }) {
       tl.to(titleEl, {
         scale: 4.5, opacity: 0, duration: 0.35, ease: 'expo.in'
       }, 0.65);
-    } 
+    }
     else if (mode === 'matrix') {
       // MODE 5: Crisp Odometer Roll & Disintegration (NO NEON GLOW!)
       tl.fromTo(titleEl,
@@ -293,23 +296,44 @@ function Preloader({ onDone }) {
   );
 }
 
-/* ═══ CURSOR ═══ */
+/* ═══ CURSOR (HUD TARGETING RETICLE) ═══ */
 function Cursor() {
   const ref = useRef(null);
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    // Performant GSAP quick setters
+    const xTo = gsap.quickTo(el, "x", { duration: 0.15, ease: "power2.out" });
+    const yTo = gsap.quickTo(el, "y", { duration: 0.15, ease: "power2.out" });
+
+    // Subtle continuous rotation for the targeting ring
+    gsap.to(el.querySelector('.hud-cursor-ring'), {
+      rotation: 360,
+      duration: 20,
+      repeat: -1,
+      ease: "none"
+    });
+
     const move = (e) => {
-      gsap.to(ref.current, { x: e.clientX, y: e.clientY, duration: 0.12, ease: 'power2.out' });
+      xTo(e.clientX);
+      yTo(e.clientY);
     };
+    
     const over = (e) => {
-      if (e.target.closest('a, button, .project-card, .magnetic, .meta-row, .tl-item, .pixel-cat')) setExpanded(true);
+      // Expand on interactive elements
+      if (e.target.closest('a, button, .project-card, .magnetic, .meta-row, .tl-item, .pixel-cat, input, textarea')) {
+        setExpanded(true);
+      }
     };
     const out = () => setExpanded(false);
 
     window.addEventListener('mousemove', move);
     document.addEventListener('mouseover', over);
     document.addEventListener('mouseout', out);
+    
     return () => {
       window.removeEventListener('mousemove', move);
       document.removeEventListener('mouseover', over);
@@ -317,7 +341,19 @@ function Cursor() {
     };
   }, []);
 
-  return <div ref={ref} className={`cursor${expanded ? ' expand' : ''}`} />;
+  return (
+    <div ref={ref} className={`hud-cursor ${expanded ? 'expand' : ''}`}>
+      <div className="hud-cursor-crosshair x" />
+      <div className="hud-cursor-crosshair y" />
+      <div className="hud-cursor-ring">
+        <div className="hud-tick tl" />
+        <div className="hud-tick tr" />
+        <div className="hud-tick bl" />
+        <div className="hud-tick br" />
+      </div>
+      <div className="hud-cursor-dot" />
+    </div>
+  );
 }
 
 /* ═══ SCROLL PROGRESS ═══ */
@@ -341,7 +377,7 @@ function ScrollProgress() {
 /* ═══ MAGNETIC ═══ */
 const Magnetic = ({ children }) => {
   const ref = useRef(null);
-  
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -364,7 +400,7 @@ const Magnetic = ({ children }) => {
 
     el.addEventListener('mousemove', mouseMove);
     el.addEventListener('mouseleave', mouseLeave);
-    
+
     return () => {
       el.removeEventListener('mousemove', mouseMove);
       el.removeEventListener('mouseleave', mouseLeave);
@@ -387,7 +423,7 @@ function AnimatedBG() {
       const y = window.scrollY;
       const h = document.body.scrollHeight;
       const ratio = y / h;
-      
+
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
       if (!isLight) {
         if (ratio < 0.2) {
@@ -413,7 +449,7 @@ function AnimatedBG() {
     gsap.to(orbARef.current, { y: '100vh', x: '50vw', scale: 2, ease: 'none', scrollTrigger: { scrub: 0.5 } });
     gsap.to(orbBRef.current, { y: '-80vh', x: '-40vw', scale: 1.5, ease: 'none', scrollTrigger: { scrub: 0.8 } });
     gsap.to(orbCRef.current, { y: '120vh', x: '20vw', rotation: 360, ease: 'none', scrollTrigger: { scrub: 1 } });
-    
+
     // Deep Parallax for Watermarks
     gsap.to(watermarkRef.current, { x: '-50vw', ease: 'none', scrollTrigger: { scrub: true } });
     gsap.fromTo(watermarkRef2.current, { x: '-30vw' }, { x: '20vw', ease: 'none', scrollTrigger: { scrub: true } });
@@ -443,19 +479,19 @@ function AnimatedBG() {
 const PixelAvatarSVG = ({ isLight }) => (
   <svg viewBox="0 0 16 16" style={{ width: '100%', height: '100%', shapeRendering: 'crispEdges' }}>
     <rect width="16" height="16" fill={isLight ? "#e2e8f0" : "#0a0a0c"} />
-    
+
     {/* Head / Skin */}
     <rect x="4" y="3" width="8" height="8" fill={isLight ? "#ffcda2" : "#e2a88d"} />
     <rect x="3" y="5" width="10" height="5" fill={isLight ? "#ffcda2" : "#e2a88d"} />
     <rect x="4" y="10" width="8" height="1" fill={isLight ? "#e5b38a" : "#c48a70"} /> {/* Chin shadow */}
-    
+
     {/* Hair */}
     <rect x="4" y="2" width="8" height="2" fill="#1c1c1c" />
     <rect x="3" y="3" width="10" height="1" fill="#1c1c1c" />
     <rect x="2" y="4" width="2" height="4" fill="#1c1c1c" />
     <rect x="12" y="4" width="2" height="4" fill="#1c1c1c" />
     <rect x="3" y="4" width="3" height="1" fill="#1c1c1c" />
-    
+
     {/* Cyberpunk Visor/Glasses */}
     <rect x="3" y="6" width="10" height="2" fill="#0a0a0a" />
     <rect x="3" y="6" width="10" height="1" fill={isLight ? "#0a0a0a" : "var(--cyan)"} />
@@ -463,15 +499,15 @@ const PixelAvatarSVG = ({ isLight }) => (
     <rect x="11" y="6" width="1" height="1" fill="#fff" />
     <rect x="2" y="6" width="1" height="1" fill="#0a0a0a" />
     <rect x="13" y="6" width="1" height="1" fill="#0a0a0a" />
-    
+
     {/* Neck */}
     <rect x="6" y="11" width="4" height="2" fill={isLight ? "#e5b38a" : "#c48a70"} />
-    
+
     {/* Tech Jacket */}
     <rect x="3" y="12" width="10" height="1" fill={isLight ? "#ffffff" : "#2d2d35"} />
     <rect x="2" y="13" width="12" height="3" fill={isLight ? "#ffffff" : "#2d2d35"} />
     <rect x="1" y="14" width="14" height="2" fill={isLight ? "#ffffff" : "#2d2d35"} />
-    
+
     {/* Jacket collar and zipper glow */}
     <rect x="5" y="12" width="2" height="1" fill={isLight ? "#e2e8f0" : "#444"} />
     <rect x="9" y="12" width="2" height="1" fill={isLight ? "#e2e8f0" : "#444"} />
@@ -493,8 +529,8 @@ function LanyardCard({ loaded, themeMode }) {
   useEffect(() => {
     if (!loaded || !dropRef.current) return;
     // initial smooth drop from ceiling
-    gsap.fromTo(dropRef.current, 
-      { y: -1500 }, 
+    gsap.fromTo(dropRef.current,
+      { y: -1500 },
       { y: 0, duration: 2.2, ease: "elastic.out(1, 0.4)", delay: 0.1 }
     );
   }, [loaded]);
@@ -502,20 +538,20 @@ function LanyardCard({ loaded, themeMode }) {
   // 2. Interactive Physics Engine
   useEffect(() => {
     if (!loaded) return;
-    
+
     // Physics Configuration
     const L = 220; // Longer rest length for the string
     const k = 0.025; // Spring constant (lower = softer/slower bounce)
     const damping = 0.95; // Air resistance
-    const gravity = 1.0; 
+    const gravity = 1.0;
     const mass = 1;
 
     // Start in perfect equilibrium
     let x = 0;
-    let y = 220; 
+    let y = 220;
     let vx = 0;
     let vy = 0;
-    
+
     let animId;
     let lastTime = performance.now();
     const timeStep = 1000 / 60; // 60fps fixed time step
@@ -523,88 +559,88 @@ function LanyardCard({ loaded, themeMode }) {
     const update = () => {
       const now = performance.now();
       let dt = now - lastTime;
-      
+
       // Prevent physics explosion if tab was inactive
-      if (dt > 100) dt = 16.66; 
-      
+      if (dt > 100) dt = 16.66;
+
       // Fixed timestep loop for perfect consistency across all monitor refresh rates (60hz, 144hz, etc)
       while (dt >= timeStep) {
-          if (!dragData.current.isDragging) {
-             const currentL = Math.sqrt(x*x + y*y) || 1;
-             
-             // Hooke's Law: F = -k * x
-             let stretch = currentL - L;
-             
-             // Clamp stretch to prevent physics explosion if pulled too far
-             const MAX_STRETCH = 500;
-             if (stretch > MAX_STRETCH) stretch = MAX_STRETCH;
-             if (stretch < -MAX_STRETCH) stretch = -MAX_STRETCH;
-             
-             const F_spring = -k * stretch;
-             
-             // Break spring force into x and y vectors
-             const Fx = F_spring * (x / currentL);
-             const Fy = F_spring * (y / currentL);
-             
-             // F = ma -> a = F/m
-             const ax = Fx / mass;
-             const ay = (Fy + gravity) / mass;
-             
-             // Apply acceleration to velocity
-             vx += ax;
-             vy += ay;
-             
-             // Clamp velocity to prevent glitching out of frame bounds
-             const MAX_V = 80;
-             if (vx > MAX_V) vx = MAX_V;
-             if (vx < -MAX_V) vx = -MAX_V;
-             if (vy > MAX_V) vy = MAX_V;
-             if (vy < -MAX_V) vy = -MAX_V;
-             
-             // Apply damping
-             vx *= damping;
-             vy *= damping;
-             
-             // Apply velocity to position
-             x += vx;
-             y += vy;
-          }
-          dt -= timeStep;
+        if (!dragData.current.isDragging) {
+          const currentL = Math.sqrt(x * x + y * y) || 1;
+
+          // Hooke's Law: F = -k * x
+          let stretch = currentL - L;
+
+          // Clamp stretch to prevent physics explosion if pulled too far
+          const MAX_STRETCH = 500;
+          if (stretch > MAX_STRETCH) stretch = MAX_STRETCH;
+          if (stretch < -MAX_STRETCH) stretch = -MAX_STRETCH;
+
+          const F_spring = -k * stretch;
+
+          // Break spring force into x and y vectors
+          const Fx = F_spring * (x / currentL);
+          const Fy = F_spring * (y / currentL);
+
+          // F = ma -> a = F/m
+          const ax = Fx / mass;
+          const ay = (Fy + gravity) / mass;
+
+          // Apply acceleration to velocity
+          vx += ax;
+          vy += ay;
+
+          // Clamp velocity to prevent glitching out of frame bounds
+          const MAX_V = 80;
+          if (vx > MAX_V) vx = MAX_V;
+          if (vx < -MAX_V) vx = -MAX_V;
+          if (vy > MAX_V) vy = MAX_V;
+          if (vy < -MAX_V) vy = -MAX_V;
+
+          // Apply damping
+          vx *= damping;
+          vy *= damping;
+
+          // Apply velocity to position
+          x += vx;
+          y += vy;
+        }
+        dt -= timeStep;
       }
       lastTime = now - dt; // save remainder
 
       // Calculate angle and stretch for DOM
-      const currentL = Math.sqrt(x*x + y*y) || 1;
-      const angle = -Math.atan2(x, y); 
-      
+      const currentL = Math.sqrt(x * x + y * y) || 1;
+      const angle = -Math.atan2(x, y);
+
       if (swingRef.current) {
-         swingRef.current.style.transform = `rotate(${angle}rad)`;
+        swingRef.current.style.transform = `rotate(${angle}rad)`;
       }
       if (stringRef.current) {
-         stringRef.current.style.height = `${currentL}px`;
+        stringRef.current.style.height = `${currentL}px`;
       }
-      
+
       animId = requestAnimationFrame(update);
     };
-    
+
     animId = requestAnimationFrame(update);
 
     // Realistic Drag & Release interaction
     const onMouseMove = (e) => {
-       if (dragData.current.isDragging) {
-         const pivot = document.getElementById('lanyard-pivot');
-         if (!pivot) return;
-         const rect = pivot.getBoundingClientRect();
-         const pivotX = rect.left + rect.width / 2;
-         const pivotY = rect.top;
-         
-         // Set physics coords based on mouse
-         x = e.clientX - pivotX;
-         y = Math.max(20, e.clientY - pivotY); 
-         
-         vx = 0;
-         vy = 0;
-       }
+      if (dragData.current.isDragging) {
+        const pivot = document.getElementById('lanyard-pivot');
+        if (!pivot) return;
+        const rect = pivot.getBoundingClientRect();
+        const pivotX = rect.left + rect.width / 2;
+        const pivotY = rect.top;
+
+        // Set physics coords based on mouse
+        x = e.clientX - pivotX;
+        y = Math.max(20, e.clientY - pivotY);
+
+        vx = 0;
+        vy = 0;
+      }
     };
     const onMouseUp = () => { dragData.current.isDragging = false; };
 
@@ -619,35 +655,35 @@ function LanyardCard({ loaded, themeMode }) {
   }, [loaded]);
 
   return (
-      <div id="lanyard-pivot" className="lanyard-pivot" ref={dropRef} style={{ position: 'absolute', top: -50, right: '15%', width: 320, zIndex: 50, pointerEvents: 'none', transform: 'translateY(-1500px)' }}>
-      <div 
-        ref={swingRef} 
-        style={{ width: '100%', transformOrigin: 'top center', display: 'flex', flexDirection: 'column', alignItems: 'center' }} 
+    <div id="lanyard-pivot" className="lanyard-pivot" ref={dropRef} style={{ position: 'absolute', top: -50, right: '15%', width: 320, zIndex: 50, pointerEvents: 'none', transform: 'translateY(-1500px)' }}>
+      <div
+        ref={swingRef}
+        style={{ width: '100%', transformOrigin: 'top center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
       >
-        
+
         {/* The String */}
         <div ref={stringRef} style={{ width: 6, height: 220, background: isLight ? 'repeating-linear-gradient(45deg, #bbb, #bbb 10px, #ddd 10px, #ddd 20px)' : 'repeating-linear-gradient(45deg, #111, #111 10px, #222 10px, #222 20px)', boxShadow: isLight ? '2px 0 5px rgba(0,0,0,0.1)' : '4px 0 10px rgba(0,0,0,0.8)', minHeight: 40 }} />
-        
+
         {/* The Clip Hardware */}
         <div style={{ width: 24, height: 16, border: isLight ? '2px solid #aaa' : '2px solid #666', borderRadius: '6px 6px 0 0', background: isLight ? 'linear-gradient(to right, #ccc, #eee, #ccc)' : 'linear-gradient(to right, #333, #555, #333)', marginTop: -2, zIndex: 2 }} />
         <div style={{ width: 14, height: 20, border: isLight ? '2px solid #bbb' : '2px solid #777', borderTop: 'none', background: isLight ? '#eee' : '#444', marginTop: 0, zIndex: 1 }} />
         <div style={{ width: 30, height: 8, background: isLight ? '#ddd' : '#222', borderRadius: 4, marginTop: -4, border: isLight ? '1px solid #aaa' : '1px solid #444', zIndex: 3 }} />
 
         {/* The ID Card */}
-        <div 
-          className="id-card" 
+        <div
+          className="id-card"
           onMouseDown={(e) => { dragData.current.isDragging = true; e.preventDefault(); }}
           style={{
             pointerEvents: 'auto',
             cursor: 'grab',
-            width: 320, height: 500, 
-            background: isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(10, 10, 12, 0.65)', 
-            backdropFilter: 'blur(30px)', 
-            border: isLight ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.15)', 
-            borderRadius: 20, padding: 24, 
+            width: 320, height: 500,
+            background: isLight ? 'rgba(255, 255, 255, 0.85)' : 'rgba(10, 10, 12, 0.65)',
+            backdropFilter: 'blur(30px)',
+            border: isLight ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.15)',
+            borderRadius: 20, padding: 24,
             boxShadow: isLight ? '0 30px 60px rgba(0,0,0,0.15), inset 0 0 30px rgba(0,0,0,0.02)' : '0 50px 100px rgba(0,0,0,0.9), inset 0 0 30px rgba(0, 212, 170, 0.05)',
             display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: 8, position: 'relative', overflow: 'hidden'
-        }}>
+          }}>
           {/* Holographic Overlay */}
           <div style={{ position: 'absolute', inset: 0, background: isLight ? 'linear-gradient(125deg, transparent 30%, rgba(255,255,255,0.4) 40%, rgba(255,255,255,0.6) 50%, transparent 60%)' : 'linear-gradient(125deg, transparent 30%, rgba(255,255,255,0.03) 40%, rgba(255,255,255,0.1) 50%, transparent 60%)', pointerEvents: 'none' }} />
 
@@ -657,13 +693,13 @@ function LanyardCard({ loaded, themeMode }) {
               <span style={{ fontSize: 18, fontWeight: 900, color: isLight ? '#000' : '#fff', fontFamily: 'var(--sans)', letterSpacing: '-0.03em', lineHeight: 1 }}>Innovators Quest</span>
               <span style={{ fontSize: 9, letterSpacing: 3, color: isLight ? 'var(--accent2)' : 'var(--cyan)', textTransform: 'uppercase', fontFamily: 'var(--mono)', marginTop: 4 }}>TECHNICAL CLUB</span>
             </div>
-            
+
             {/* Microchip */}
             <div style={{ width: 40, height: 30, background: '#d4af37', borderRadius: 4, border: '1px solid #aa8822', display: 'flex', flexWrap: 'wrap', padding: 2, gap: 2, opacity: 0.9 }}>
               {Array(15).fill(0).map((_, i) => <div key={i} style={{ width: '15%', height: '25%', background: 'rgba(0,0,0,0.2)' }} />)}
             </div>
           </div>
-          
+
           {/* Photo Section */}
           <div style={{ width: '100%', display: 'flex', gap: 20, marginBottom: 24 }}>
             <div style={{ width: 140, height: 160, borderRadius: 8, overflow: 'hidden', border: isLight ? '2px solid rgba(0,0,0,0.1)' : '2px solid rgba(255,255,255,0.1)', background: isLight ? '#e2e8f0' : '#000', position: 'relative' }}>
@@ -682,11 +718,11 @@ function LanyardCard({ loaded, themeMode }) {
               </div>
             </div>
           </div>
-          
+
           {/* Main Info */}
           <h3 style={{ fontSize: 32, fontWeight: 800, margin: '0 0 4px', color: isLight ? '#000' : '#fff', fontFamily: 'var(--sans)', letterSpacing: '-0.02em' }}>Dhrub Kumar Garg</h3>
           <p style={{ color: 'var(--dim)', fontSize: 14, margin: '0 0 20px', fontFamily: 'var(--mono)' }}>ID: <span style={{ color: isLight ? '#000' : '#fff' }}>0x7F4A_99B</span></p>
-          
+
           {/* Spacer */}
           <div style={{ flex: 1 }} />
 
@@ -743,7 +779,7 @@ function Hero({ loaded, themeMode }) {
 
   return (
     <section className="sect hero" id="home" ref={ref}>
-      
+
       <div className="hero-content">
         <div className="hero-name-wrap">
           <div className="hero-name gradient-text-1" style={{ transform: 'translateY(120%)' }}>Dhrub</div>
@@ -805,13 +841,13 @@ function About() {
 
   useGSAP(() => {
     const el = ref.current;
-    
+
     // Word reveal with stagger + subtle rotation
-    gsap.fromTo(el.querySelectorAll('.sect-heading .word-reveal'), 
+    gsap.fromTo(el.querySelectorAll('.sect-heading .word-reveal'),
       { y: '120%', rotateX: 40, opacity: 0 },
       { scrollTrigger: { trigger: el, start: 'top 85%' }, y: '0%', rotateX: 0, opacity: 1, duration: 1.4, stagger: 0.08, ease: 'expo.out' }
     );
-    
+
     // About grid: slide from left with clip reveal
     const aboutText = el.querySelector('.about-text');
     const aboutMeta = el.querySelector('.about-meta');
@@ -845,35 +881,36 @@ function About() {
       <p className="sect-label reveal">01 — About</p>
       <h2 className="sect-heading gradient-text-1">
         <span style={{ display: 'inline-flex', flexWrap: 'wrap', overflow: 'hidden' }}>
-          <span className="word-reveal" style={{ transform: 'translateY(120%)', display: 'inline-block', marginRight: '0.25em' }}>Not</span>
-          <span className="word-reveal" style={{ transform: 'translateY(120%)', display: 'inline-block', marginRight: '0.25em' }}>your</span>
-          <span className="word-reveal" style={{ transform: 'translateY(120%)', display: 'inline-block', marginRight: '0.25em' }}>typical</span>
-          <span className="word-reveal serif" style={{ transform: 'translateY(120%)', display: 'inline-block' }}>CS student.</span>
+          <span className="word-reveal" style={{ transform: 'translateY(120%)', display: 'inline-block', marginRight: '0.25em' }}>I</span>
+          <span className="word-reveal" style={{ transform: 'translateY(120%)', display: 'inline-block', marginRight: '0.25em' }}>Build</span>
+          <span className="word-reveal" style={{ transform: 'translateY(120%)', display: 'inline-block', marginRight: '0.25em' }}>Beyond</span>
+          <span className="word-reveal serif" style={{ transform: 'translateY(120%)', display: 'inline-block' }}>The Surface...</span>
         </span>
       </h2>
       <div className="about-grid">
         <div className="about-text reveal">
           <p>
-            I don't just call APIs — I <strong>build what's behind them</strong>.
-            I've reimplemented the full Transformer architecture from the original paper,
-            built anomaly detection processing 2.5M+ records in real-time,
-            and fine-tuned language models cutting 75% of manual triage effort.
+            I don't just build interfaces — I <strong>build what makes them work</strong>.
+            I've built a full-stack trading platform deployed on AWS, a multithreaded
+            Deep Packet Inspection engine processing ~196K packets/sec, and an IoT
+            wearable system backed by a <strong>published Indian patent</strong>.
           </p>
           <p>
-            Currently interning at the <strong>Ministry of Defence</strong>, building
-            computer vision systems for industrial quality inspection on live manufacturing lines.
-            I care about <strong>craft</strong> — clean code, thoughtful systems,
-            and ML that works at scale, not just in a notebook.
+            I'm currently pursuing B.Tech in Information Technology at
+            <strong> VIT Vellore</strong>, focused on full-stack engineering,
+            systems, and problem solving. I care about <strong>craft</strong> —
+            clean code, thoughtful architecture, accessible interfaces,
+            and building software that works beyond the demo.
           </p>
         </div>
         <div className="about-meta reveal">
           {[
-            ['Location', 'India'],
-            ['Education', 'B.Tech IT, VIT Vellore'],
-            ['Focus', 'Full Stack & System Design'],
-            ['Currently', 'B.Tech IT Student'],
-            ['Languages', 'JS, TS, Python, C++, Java'],
-            ['Interests', 'Open Source, UI/UX'],
+            ['LOCATION', 'Vellore, Tamil Nadu'],
+            ['EDUCATION', 'B.Tech IT · VIT Vellore'],
+            ['FOCUS', 'Full-Stack Engineering & Systems'],
+            ['CURRENTLY', 'B.Tech IT · 2024–2028'],
+            ['LANGUAGES', 'C++ · JavaScript · C · Java · Python'],
+            ['INTERESTS', 'Software Engineering · System Design · Problem Solving'],
           ].map(([k, v]) => (
             <div className="meta-row" key={k}>
               <span className="meta-k">{k}</span>
@@ -923,8 +960,8 @@ function Projects({ data }) {
         {data.map((proj, i) => {
           const isExpanded = expandedIndex === i;
           return (
-            <div 
-              key={i} 
+            <div
+              key={i}
               className={`pro-row ${isExpanded ? 'expanded' : ''}`}
               onClick={() => toggleRow(i)}
             >
@@ -943,12 +980,12 @@ function Projects({ data }) {
                     <div className="pro-image-wrap">
                       <img src={PROJECT_IMAGES[proj.name] || imgTransformer} alt={proj.name} className="pro-image" />
                     </div>
-                    
+
                     <div className="pro-details">
                       <p className="pro-desc">
                         {proj.desc}. Focused on performance, minimal dependencies, and high-quality user experience. Built from first principles to ensure complete control over the architecture.
                       </p>
-                      
+
                       <div className="pro-metrics">
                         {proj.stack.map(s => <span className="pro-metric" key={s}>{s}</span>)}
                         {proj.metrics && proj.metrics.map(m => <span className="pro-metric" key={m}>{m}</span>)}
@@ -956,11 +993,11 @@ function Projects({ data }) {
 
                       <div className="pro-links">
                         {proj.links.map(l => (
-                          <a 
-                            key={l.label} 
-                            href={l.url} 
-                            className="pro-link" 
-                            target="_blank" 
+                          <a
+                            key={l.label}
+                            href={l.url}
+                            className="pro-link"
+                            target="_blank"
                             rel="noopener noreferrer"
                             onClick={e => e.stopPropagation()}
                           >
@@ -987,7 +1024,7 @@ function Experience({ data }) {
   useGSAP(() => {
     const el = ref.current;
     if (!el) return;
-    
+
     // Heading: dramatic scale-up from nothing
     gsap.fromTo(el.querySelector('.sect-heading'),
       { opacity: 0, y: 50, scale: 0.8, filter: 'blur(12px)' },
@@ -998,19 +1035,19 @@ function Experience({ data }) {
     const items = el.querySelectorAll('.exp-item');
     items.forEach((item, i) => {
       gsap.fromTo(item,
-        { 
-          clipPath: 'inset(0 0 0 100%)', 
-          x: 80, 
-          opacity: 0 
+        {
+          clipPath: 'inset(0 0 0 100%)',
+          x: 80,
+          opacity: 0
         },
-        { 
-          scrollTrigger: { trigger: item, start: 'top 85%' }, 
-          clipPath: 'inset(0 0 0 0%)', 
-          x: 0, 
-          opacity: 1, 
-          duration: 1, 
+        {
+          scrollTrigger: { trigger: item, start: 'top 85%' },
+          clipPath: 'inset(0 0 0 0%)',
+          x: 0,
+          opacity: 1,
+          duration: 1,
           delay: i * 0.12,
-          ease: 'power4.out' 
+          ease: 'power4.out'
         }
       );
     });
@@ -1024,7 +1061,7 @@ function Experience({ data }) {
   return (
     <section className="sect sect-experience" id="experience" ref={ref}>
       <p className="sect-label reveal">03 — Experience</p>
-      <h2 className="sect-heading reveal">Where I've <em className="serif">worked.</em></h2>
+      <h2 className="sect-heading reveal">Where I’ve <em className="serif">contributed.</em></h2>
       {data.map((exp, i) => (
         <div className="exp-item reveal" key={i}>
           <span className="exp-date">{exp.date}</span>
@@ -1047,53 +1084,53 @@ function Experience({ data }) {
 const PAGE_ILLUSTRATIONS = [
   // 2023 — A simple monitor/laptop
   <svg key="0" viewBox="0 0 200 140" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <rect x="40" y="20" width="120" height="80" rx="6"/>
-    <line x1="40" y1="90" x2="160" y2="90"/>
-    <line x1="85" y1="110" x2="115" y2="110"/>
-    <line x1="75" y1="110" x2="125" y2="110"/>
-    <rect x="55" y="32" width="90" height="48" rx="2" strokeOpacity="0.4"/>
-    <line x1="65" y1="44" x2="105" y2="44" strokeOpacity="0.5"/>
-    <line x1="65" y1="52" x2="120" y2="52" strokeOpacity="0.5"/>
-    <line x1="65" y1="60" x2="95" y2="60" strokeOpacity="0.5"/>
-    <circle cx="100" cy="100" r="2" fill="currentColor" strokeWidth="0"/>
+    <rect x="40" y="20" width="120" height="80" rx="6" />
+    <line x1="40" y1="90" x2="160" y2="90" />
+    <line x1="85" y1="110" x2="115" y2="110" />
+    <line x1="75" y1="110" x2="125" y2="110" />
+    <rect x="55" y="32" width="90" height="48" rx="2" strokeOpacity="0.4" />
+    <line x1="65" y1="44" x2="105" y2="44" strokeOpacity="0.5" />
+    <line x1="65" y1="52" x2="120" y2="52" strokeOpacity="0.5" />
+    <line x1="65" y1="60" x2="95" y2="60" strokeOpacity="0.5" />
+    <circle cx="100" cy="100" r="2" fill="currentColor" strokeWidth="0" />
   </svg>,
   // 2024 — Eye + neural connections (computer vision)
   <svg key="1" viewBox="0 0 200 140" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <ellipse cx="100" cy="60" rx="60" ry="30"/>
-    <circle cx="100" cy="60" r="15"/>
-    <circle cx="100" cy="60" r="6" fill="currentColor" fillOpacity="0.15" strokeWidth="0"/>
-    <circle cx="100" cy="60" r="3" fill="currentColor" strokeWidth="0"/>
-    <line x1="50" y1="100" x2="100" y2="75" strokeOpacity="0.4"/>
-    <line x1="100" y1="75" x2="150" y2="100" strokeOpacity="0.4"/>
-    <circle cx="50" cy="105" r="5" strokeOpacity="0.6"/>
-    <circle cx="150" cy="105" r="5" strokeOpacity="0.6"/>
-    <circle cx="100" cy="110" r="5" strokeOpacity="0.6"/>
+    <ellipse cx="100" cy="60" rx="60" ry="30" />
+    <circle cx="100" cy="60" r="15" />
+    <circle cx="100" cy="60" r="6" fill="currentColor" fillOpacity="0.15" strokeWidth="0" />
+    <circle cx="100" cy="60" r="3" fill="currentColor" strokeWidth="0" />
+    <line x1="50" y1="100" x2="100" y2="75" strokeOpacity="0.4" />
+    <line x1="100" y1="75" x2="150" y2="100" strokeOpacity="0.4" />
+    <circle cx="50" cy="105" r="5" strokeOpacity="0.6" />
+    <circle cx="150" cy="105" r="5" strokeOpacity="0.6" />
+    <circle cx="100" cy="110" r="5" strokeOpacity="0.6" />
   </svg>,
   // 2025 — Transformer architecture blocks
   <svg key="2" viewBox="0 0 200 140" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <rect x="20" y="50" width="40" height="40" rx="4"/>
-    <rect x="80" y="25" width="40" height="40" rx="4"/>
-    <rect x="80" y="75" width="40" height="40" rx="4"/>
-    <rect x="140" y="50" width="40" height="40" rx="4"/>
-    <line x1="60" y1="70" x2="80" y2="45" strokeOpacity="0.5"/>
-    <line x1="60" y1="70" x2="80" y2="95" strokeOpacity="0.5"/>
-    <line x1="120" y1="45" x2="140" y2="70" strokeOpacity="0.5"/>
-    <line x1="120" y1="95" x2="140" y2="70" strokeOpacity="0.5"/>
+    <rect x="20" y="50" width="40" height="40" rx="4" />
+    <rect x="80" y="25" width="40" height="40" rx="4" />
+    <rect x="80" y="75" width="40" height="40" rx="4" />
+    <rect x="140" y="50" width="40" height="40" rx="4" />
+    <line x1="60" y1="70" x2="80" y2="45" strokeOpacity="0.5" />
+    <line x1="60" y1="70" x2="80" y2="95" strokeOpacity="0.5" />
+    <line x1="120" y1="45" x2="140" y2="70" strokeOpacity="0.5" />
+    <line x1="120" y1="95" x2="140" y2="70" strokeOpacity="0.5" />
     <text x="95" y="50" fontSize="8" strokeWidth="0.5" textAnchor="middle" dominantBaseline="middle">Attn</text>
     <text x="95" y="100" fontSize="8" strokeWidth="0.5" textAnchor="middle" dominantBaseline="middle">FFN</text>
   </svg>,
   // 2026 — Shield / defence badge
   <svg key="3" viewBox="0 0 200 140" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <path d="M100 20 L150 40 L150 85 Q150 120 100 130 Q50 120 50 85 L50 40 Z"/>
-    <path d="M100 35 L135 50 L135 80 Q135 108 100 118 Q65 108 65 80 L65 50 Z" strokeOpacity="0.4"/>
-    <polyline points="82,72 95,85 120,60" strokeWidth="2.5"/>
+    <path d="M100 20 L150 40 L150 85 Q150 120 100 130 Q50 120 50 85 L50 40 Z" />
+    <path d="M100 35 L135 50 L135 80 Q135 108 100 118 Q65 108 65 80 L65 50 Z" strokeOpacity="0.4" />
+    <polyline points="82,72 95,85 120,60" strokeWidth="2.5" />
   </svg>,
   // 2027 — Rocket / arrow up
   <svg key="4" viewBox="0 0 200 140" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-    <path d="M100 15 C115 25 130 55 130 80 L100 95 L70 80 C70 55 85 25 100 15Z"/>
-    <circle cx="100" cy="58" r="10"/>
-    <path d="M75 95 L65 115 L80 110 L100 125 L120 110 L135 115 L125 95" strokeOpacity="0.5"/>
-    <line x1="100" y1="125" x2="100" y2="135" strokeOpacity="0.4"/>
+    <path d="M100 15 C115 25 130 55 130 80 L100 95 L70 80 C70 55 85 25 100 15Z" />
+    <circle cx="100" cy="58" r="10" />
+    <path d="M75 95 L65 115 L80 110 L100 125 L120 110 L135 115 L125 95" strokeOpacity="0.5" />
+    <line x1="100" y1="125" x2="100" y2="135" strokeOpacity="0.4" />
   </svg>,
 ];
 
@@ -1101,89 +1138,89 @@ const PAGE_ILLUSTRATIONS = [
 
 const MANUSCRIPT_ENTRIES = [
   {
-    year: '2023',
+    year: '2024',
     chapter: '01',
     title: 'Started B.Tech IT @ VIT Vellore',
     subtitle: 'THE BEGINNING',
-    desc: 'First lines of Python, first "hello world," and the first all-nighter. Discovered a deep passion for understanding the mathematical foundations behind code.',
-    badge: 'FIRST PRINCIPLES',
+    desc: 'Built my foundations in Data Structures, Algorithms, OOP, and DBMS while exploring software development.',
+    badge: 'FOUNDATIONS',
     svg: (
       <svg viewBox="0 0 160 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-        <rect x="20" y="15" width="120" height="70" rx="4" strokeOpacity="0.8"/>
-        <line x1="20" y1="72" x2="140" y2="72" strokeOpacity="0.3"/>
-        <line x1="32" y1="30" x2="80" y2="30" stroke="var(--accent)" strokeWidth="2"/>
-        <line x1="32" y1="42" x2="110" y2="42" strokeOpacity="0.5"/>
-        <line x1="32" y1="52" x2="95" y2="52" strokeOpacity="0.5"/>
-        <circle cx="125" cy="30" r="4" fill="var(--accent)" strokeWidth="0"/>
+        <rect x="20" y="15" width="120" height="70" rx="4" strokeOpacity="0.8" />
+        <line x1="20" y1="72" x2="140" y2="72" strokeOpacity="0.3" />
+        <line x1="32" y1="30" x2="80" y2="30" stroke="var(--accent)" strokeWidth="2" />
+        <line x1="32" y1="42" x2="110" y2="42" strokeOpacity="0.5" />
+        <line x1="32" y1="52" x2="95" y2="52" strokeOpacity="0.5" />
+        <circle cx="125" cy="30" r="4" fill="var(--accent)" strokeWidth="0" />
       </svg>
     )
   },
   {
-    year: '2024',
+    year: '—',
     chapter: '02',
-    title: 'OpenCV & Computer Vision',
-    subtitle: 'INTELLIGENT PERCEPTION',
-    desc: 'Built early computer vision systems & anomaly detection models. Trained Autoencoders on 2.5M+ records, obsessing over real-time latency and feature extraction.',
-    badge: '2.5M+ RECORDS',
+    title: 'Systems & Full-Stack',
+    subtitle: 'ENGINEERING',
+    desc: 'Moved from learning concepts to building real systems — from full-stack applications to networking and IoT projects.',
+    badge: 'REAL SYSTEMS',
     svg: (
       <svg viewBox="0 0 160 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-        <ellipse cx="80" cy="50" rx="50" ry="25" stroke="var(--accent)"/>
-        <circle cx="80" cy="50" r="14" stroke="var(--accent)"/>
-        <circle cx="80" cy="50" r="5" fill="var(--accent)" strokeWidth="0"/>
-        <line x1="30" y1="85" x2="80" y2="65" strokeOpacity="0.4"/>
-        <line x1="80" y1="65" x2="130" y2="85" strokeOpacity="0.4"/>
-        <circle cx="30" cy="85" r="3" fill="currentColor" strokeWidth="0"/>
-        <circle cx="130" cy="85" r="3" fill="currentColor" strokeWidth="0"/>
+        <ellipse cx="80" cy="50" rx="50" ry="25" stroke="var(--accent)" />
+        <circle cx="80" cy="50" r="14" stroke="var(--accent)" />
+        <circle cx="80" cy="50" r="5" fill="var(--accent)" strokeWidth="0" />
+        <line x1="30" y1="85" x2="80" y2="65" strokeOpacity="0.4" />
+        <line x1="80" y1="65" x2="130" y2="85" strokeOpacity="0.4" />
+        <circle cx="30" cy="85" r="3" fill="currentColor" strokeWidth="0" />
+        <circle cx="130" cy="85" r="3" fill="currentColor" strokeWidth="0" />
       </svg>
     )
   },
   {
-    year: '2025',
+    year: '2026',
     chapter: '03',
-    title: 'Transformers & FlowBERT',
-    subtitle: 'NEURAL ARCHITECTURES',
-    desc: 'Reimplemented Attention Is All You Need from scratch without high-level libraries. Multi-task fine-tuned DistilBERT cutting manual ticket triage effort by 75%.',
-    badge: '75% TRIAGE CUT',
+    title: 'Open Source Contributor',
+    subtitle: 'COMMUNITY & IMPACT',
+    desc: 'Selected for GirlScript Summer of Code 2026, collaborating with mentors and maintainers on GitHub-based projects.',
+    badge: 'GSSOC 2026',
     svg: (
       <svg viewBox="0 0 160 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-        <rect x="15" y="35" width="35" height="30" rx="3" stroke="var(--accent)"/>
-        <rect x="62" y="15" width="36" height="30" rx="3"/>
-        <rect x="62" y="55" width="36" height="30" rx="3"/>
-        <rect x="110" y="35" width="35" height="30" rx="3" stroke="var(--accent)"/>
-        <line x1="50" y1="50" x2="62" y2="30" strokeOpacity="0.5"/>
-        <line x1="50" y1="50" x2="62" y2="70" strokeOpacity="0.5"/>
-        <line x1="98" y1="30" x2="110" y2="50" strokeOpacity="0.5"/>
-        <line x1="98" y1="70" x2="110" y2="50" strokeOpacity="0.5"/>
+        <rect x="15" y="35" width="35" height="30" rx="3" stroke="var(--accent)" />
+        <rect x="62" y="15" width="36" height="30" rx="3" />
+        <rect x="62" y="55" width="36" height="30" rx="3" />
+        <rect x="110" y="35" width="35" height="30" rx="3" stroke="var(--accent)" />
+        <line x1="50" y1="50" x2="62" y2="30" strokeOpacity="0.5" />
+        <line x1="50" y1="50" x2="62" y2="70" strokeOpacity="0.5" />
+        <line x1="98" y1="30" x2="110" y2="50" strokeOpacity="0.5" />
+        <line x1="98" y1="70" x2="110" y2="50" strokeOpacity="0.5" />
       </svg>
     )
   },
   {
     year: '2026',
     chapter: '04',
-    title: 'Ministry of Defence Internship',
-    subtitle: 'INDUSTRIAL AI IN PRODUCTION',
-    desc: 'Selected for AI-driven textile defect detection at Ordnance Clothing Factory (OCF) Shahjahanpur. Architected live manufacturing line QA models for defense production.',
-    badge: 'DEFENCE AI INTERN',
+    title: 'Published Patent',
+    subtitle: 'INNOVATION',
+    desc: 'Built a wearable acoustic monitoring system with ESP8266, Embedded C, real-time detection, and automated alerts.',
+    badge: 'INDIAN PATENT',
     svg: (
       <svg viewBox="0 0 160 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-        <path d="M80 15 L120 30 L120 65 Q120 90 80 98 Q40 90 40 65 L40 30 Z" stroke="var(--accent)"/>
-        <path d="M80 28 L108 38 L108 62 Q108 80 80 86 Q52 80 52 62 L52 38 Z" strokeOpacity="0.4"/>
-        <polyline points="66,55 76,65 96,45" stroke="var(--accent)" strokeWidth="2"/>
+        <path d="M80 15 L120 30 L120 65 Q120 90 80 98 Q40 90 40 65 L40 30 Z" stroke="var(--accent)" />
+        <path d="M80 28 L108 38 L108 62 Q108 80 80 86 Q52 80 52 62 L52 38 Z" strokeOpacity="0.4" />
+        <polyline points="66,55 76,65 96,45" stroke="var(--accent)" strokeWidth="2" />
       </svg>
     )
   },
   {
-    year: '2027',
+    year: '2028',
     chapter: '05',
-    title: 'Next: AI Engineer',
-    subtitle: 'BUILDING AT SCALE',
-    desc: 'Graduating IT & targeting Full-Stack / Systems Engineering roles. Building fast, scalable products with clean architecture and great UX.',
-    badge: 'FULL-TIME READY',
+    title: 'Next: Software Engineer',
+    subtitle: 'THE FUTURE',
+    desc: 'Building toward SDE roles with a focus on full-stack engineering, systems, problem solving, and clean architecture.',
+    badge: 'SDE READY',
     svg: (
       <svg viewBox="0 0 160 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-        <path d="M80 12 C92 20 104 45 104 65 L80 78 L56 65 C56 45 68 20 80 12Z" stroke="var(--accent)"/>
-        <circle cx="80" cy="46" r="8" stroke="var(--accent)"/>
-        <path d="M60 78 L52 92 L64 88 L80 98 L96 88 L108 92 L100 78" strokeOpacity="0.5"/>
+        <path d="M80 12 C92 20 104 45 104 65 L80 78 L56 65 C56 45 68 20 80 12Z" stroke="var(--accent)" />
+        <circle cx="80" cy="46" r="8" stroke="var(--accent)" />
+        <path d="M60 78 L52 92 L64 88 L80 98 L96 88 L108 92 L100 78" strokeOpacity="0.5" />
       </svg>
     )
   }
@@ -1258,27 +1295,27 @@ function Timeline({ data }) {
     // Hold perfectly flat 2D state at the very beginning
     tl.to(canvas, { scale: 1.0, xPercent: 0, yPercent: 0, rotateZ: 0, rotateX: 0, rotateY: 0, duration: 1.0 }, 0)
 
-    // Chapter 01 (2023 - Top Left)
+      // Chapter 01 (2023 - Top Left)
       .to(canvas, { scale: 1.28, xPercent: 22, yPercent: 20, rotateZ: -1, rotateX: -8, rotateY: 4, ease: 'power2.inOut', duration: 1.0 }, 1.0)
       .to(canvas, { scale: 1.28, xPercent: 22, yPercent: 20, rotateZ: -1, rotateX: -8, rotateY: 4, ease: 'none', duration: 1.0 }, 2.0)
 
-    // Chapter 02 (2024 - Bottom Left)
+      // Chapter 02 (2024 - Bottom Left)
       .to(canvas, { scale: 1.28, xPercent: 22, yPercent: -20, rotateZ: 1, rotateX: -10, rotateY: 3, ease: 'power2.inOut', duration: 1.0 }, 3.0)
       .to(canvas, { scale: 1.28, xPercent: 22, yPercent: -20, rotateZ: 1, rotateX: -10, rotateY: 3, ease: 'none', duration: 1.0 }, 4.0)
 
-    // Chapter 03 (2025 - Top Right)
+      // Chapter 03 (2025 - Top Right)
       .to(canvas, { scale: 1.28, xPercent: -22, yPercent: 22, rotateZ: -1, rotateX: -8, rotateY: -4, ease: 'power2.inOut', duration: 1.0 }, 5.0)
       .to(canvas, { scale: 1.28, xPercent: -22, yPercent: 22, rotateZ: -1, rotateX: -8, rotateY: -4, ease: 'none', duration: 1.0 }, 6.0)
 
-    // Chapter 04 (2026 - Middle Right)
+      // Chapter 04 (2026 - Middle Right)
       .to(canvas, { scale: 1.28, xPercent: -22, yPercent: 0, rotateZ: 1, rotateX: -10, rotateY: -3, ease: 'power2.inOut', duration: 1.0 }, 7.0)
       .to(canvas, { scale: 1.28, xPercent: -22, yPercent: 0, rotateZ: 1, rotateX: -10, rotateY: -3, ease: 'none', duration: 1.0 }, 8.0)
 
-    // Chapter 05 (2027 - Bottom Right)
+      // Chapter 05 (2027 - Bottom Right)
       .to(canvas, { scale: 1.28, xPercent: -22, yPercent: -22, rotateZ: -0.5, rotateX: -12, rotateY: -2, ease: 'power2.inOut', duration: 1.0 }, 9.0)
       .to(canvas, { scale: 1.28, xPercent: -22, yPercent: -22, rotateZ: -0.5, rotateX: -12, rotateY: -2, ease: 'none', duration: 1.0 }, 10.0)
 
-    // Pull back smoothly to a perfectly flat 2D overview revealing the complete manuscript spread!
+      // Pull back smoothly to a perfectly flat 2D overview revealing the complete manuscript spread!
       .to(canvas, { scale: 1.0, xPercent: 0, yPercent: 0, rotateZ: 0, rotateX: 0, rotateY: 0, ease: 'power2.inOut', duration: 1.0 }, 11.0);
 
     return () => {
@@ -1297,8 +1334,8 @@ function Timeline({ data }) {
         </div>
         <div className="hud-chapters">
           {MANUSCRIPT_ENTRIES.map((item, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className={`hud-chip ${activeStep === idx ? 'active' : ''}`}
             >
               <span className="hud-year">{item.year}</span>
@@ -1317,9 +1354,9 @@ function Timeline({ data }) {
         <div className="manuscript-canvas" ref={canvasRef}>
           <div className="manuscript-book">
             {/* Dynamic Freehand Organic Ink Path overlaying the notebook spread */}
-            <svg 
-              className="manuscript-ink-svg" 
-              viewBox="0 0 1400 850" 
+            <svg
+              className="manuscript-ink-svg"
+              viewBox="0 0 1400 850"
               style={{
                 position: 'absolute',
                 inset: 0,
@@ -1347,13 +1384,13 @@ function Timeline({ data }) {
               <circle cx="1080" cy="615" r="5" fill="var(--accent)" />
 
               {/* Glowing Line-Tracking Tour Guide Marker Head */}
-              <circle 
-                ref={headRef} 
-                cx="320" 
-                cy="170" 
-                r="7" 
-                fill="#ffffff" 
-                stroke="var(--accent)" 
+              <circle
+                ref={headRef}
+                cx="320"
+                cy="170"
+                r="7"
+                fill="#ffffff"
+                stroke="var(--accent)"
                 strokeWidth="3.5"
               />
             </svg>
@@ -1367,7 +1404,7 @@ function Timeline({ data }) {
             <div className="mb-page mb-page-left">
               <div className="mb-paper-lines" />
               <div className="mb-watermark">2023—2024</div>
-              
+
               {/* ENTRY 2023 (Top Left) */}
               <div className={`mb-entry entry-2023 ${activeStep === 0 ? 'focused' : ''}`}>
                 <div className="entry-head">
@@ -1455,22 +1492,42 @@ function Timeline({ data }) {
 /* ═══ STATS ═══ */
 function Stats({ themeMode }) {
   const ref = useRef(null);
-  const [githubStats, setGithubStats] = useState({ repos: 0, followers: 0, papers: 6 });
+  const [codolioStats, setCodolioStats] = useState(null);
+  const [syncTime, setSyncTime] = useState(null);
 
   useEffect(() => {
-    fetch('https://api.github.com/users/Dhrub-Kumar-Garg')
-      .then(res => res.json())
+    fetch('/api/codolio')
+      .then(res => {
+        if (!res.ok) throw new Error('API route not available');
+        return res.json();
+      })
       .then(data => {
-        if (data.public_repos !== undefined) {
-          setGithubStats(prev => ({ ...prev, repos: data.public_repos, followers: data.followers }));
+        setCodolioStats(data);
+        if (data.lastSynced) {
+          const d = new Date(data.lastSynced);
+          const formatted = d.toLocaleDateString('en-GB', {
+            day: '2-digit', month: 'short', year: 'numeric'
+          }).toUpperCase() + ' ' + d.toLocaleTimeString('en-GB', {
+            hour: '2-digit', minute: '2-digit', hour12: false
+          }) + ' IST'; // Note: Assuming IST display as requested
+          setSyncTime(formatted);
         }
       })
-      .catch(err => console.error("Failed to fetch GitHub stats", err));
+      .catch(err => {
+        console.warn("Falling back to cached Codolio stats (API unavailable)", err);
+        setCodolioStats({
+          questionsSolved: 197,
+          activeDays: 120,
+          maxStreak: 14,
+          currentStreak: 3
+        });
+        setSyncTime('12 SEP 2026 19:20 IST');
+      });
   }, []);
 
   useGSAP(() => {
     const el = ref.current;
-    if (!el || githubStats.repos === 0) return; // Wait until fetched
+    if (!el || !codolioStats) return; // Wait until fetched or fallback applied
 
     gsap.fromTo(el.querySelector('.sect-heading'),
       { opacity: 0, y: 30 },
@@ -1482,7 +1539,7 @@ function Stats({ themeMode }) {
       { scrollTrigger: { trigger: el, start: 'top 80%' }, y: 0, opacity: 1, skewY: 0, duration: 1, stagger: 0.1, ease: 'power4.out', transformOrigin: "left top" }
     );
 
-    gsap.fromTo(el.querySelector('.heatmap-wrap'),
+    gsap.fromTo(el.querySelector('.codolio-panel'),
       { y: 40, opacity: 0 },
       { scrollTrigger: { trigger: el, start: 'top 75%' }, y: 0, opacity: 1, duration: 1, ease: 'power3.out' }
     );
@@ -1501,40 +1558,67 @@ function Stats({ themeMode }) {
         },
       });
     });
-  }, { scope: ref, dependencies: [githubStats] });
+  }, { scope: ref, dependencies: [codolioStats] });
 
   return (
     <section className="sect sect-stats" id="stats" ref={ref}>
-      <p className="sect-label">05 — Stats</p>
-      <h2 className="sect-heading">By the <em className="serif">numbers.</em></h2>
+      <p className="sect-label">05 — STATS</p>
+      <h2 className="sect-heading">Engineering <em className="serif">Metrics.</em></h2>
       <div className="stats-row">
-        {[
-          [githubStats.followers.toString(), 'GitHub Followers'],
-          [githubStats.repos.toString(), 'Public Repositories'],
-          [githubStats.papers.toString(), 'Research Papers Read'],
+        {codolioStats ? [
+          [codolioStats.questionsSolved.toString(), 'QUESTIONS SOLVED'],
+          [codolioStats.activeDays.toString(), 'ACTIVE DAYS'],
+          [codolioStats.maxStreak.toString(), 'MAX STREAK'],
         ].map(([n, l]) => (
           <div className="stat-cell" key={l}>
             <div className="stat-number" data-value={n}>0</div>
             <div className="stat-label">{l}</div>
           </div>
-        ))}
+        )) : (
+          <div className="stat-cell loading">
+            <div className="stat-number" style={{ opacity: 0.5, animation: 'pulse 1.5s infinite' }}>---</div>
+            <div className="stat-label" style={{ opacity: 0.5 }}>SYNCING METRICS...</div>
+          </div>
+        )}
       </div>
-      <div className="heatmap-wrap">
-        <div className="heatmap-header">
-          <span className="label">Contribution Activity</span>
-          <span style={{ color: 'var(--dim)' }}>Last 12 months</span>
+
+      {codolioStats && (
+        <div className="codolio-panel" style={{ 
+          marginTop: '4rem', 
+          padding: '2rem', 
+          border: '1px solid var(--border)', 
+          background: 'rgba(255, 255, 255, 0.02)',
+          borderRadius: '8px' 
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <span className="label" style={{ display: 'block', fontSize: '1rem', marginBottom: '0.25rem' }}>Problem Solving Activity</span>
+              <span style={{ color: 'var(--dim)', fontSize: '0.85rem' }}>Dynamic Streak Analytics</span>
+            </div>
+            {syncTime && (
+              <div style={{ fontSize: '0.75rem', letterSpacing: '0.1em', opacity: 0.6, fontFamily: 'var(--font-mono)' }}>
+                LAST SYNCED · {syncTime}
+              </div>
+            )}
+          </div>
+          
+          <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, minWidth: '150px' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 600, color: 'var(--accent)' }}>
+                {codolioStats.currentStreak} <span style={{ fontSize: '1rem', color: 'var(--text)', fontWeight: 400 }}>Days</span>
+              </div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--dim)', marginTop: '0.25rem' }}>Current Active Streak</div>
+            </div>
+            
+            <div style={{ flex: 1, minWidth: '150px' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 600 }}>
+                {codolioStats.maxStreak} <span style={{ fontSize: '1rem', color: 'var(--dim)', fontWeight: 400 }}>Days</span>
+              </div>
+              <div style={{ fontSize: '0.85rem', color: 'var(--dim)', marginTop: '0.25rem' }}>All-Time Max Streak</div>
+            </div>
+          </div>
         </div>
-        <div className="heatmap-scroll">
-          <GitHubCalendar 
-            username="Dhrub-Kumar-Garg" 
-            colorScheme={themeMode}
-            theme={{
-              light: ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39'],
-              dark: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'],
-            }}
-          />
-        </div>
-      </div>
+      )}
     </section>
   );
 }
@@ -1578,7 +1662,7 @@ function CRTTerminal() {
         setBooted(true);
         return;
       }
-      const line = bootLines[i]; 
+      const line = bootLines[i];
       setLines((prev) => [...prev, line]);
       i++;
       if (bodyRef.current) bodyRef.current.scrollTop = 99999;
@@ -1701,7 +1785,7 @@ function CRTTerminal() {
               );
             })}
             {!booted && lines.length > 0 && <span className="cursor-block">█</span>}
-            
+
             {booted && (
               <div className="term-input-line">
                 <span className="prompt">dhrub@portfolio:~$</span>
@@ -1754,7 +1838,7 @@ function Contact() {
       formData.append('name', form.name);
       formData.append('email', form.email);
       formData.append('message', form.message);
-      
+
       const res = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -1790,7 +1874,7 @@ function Contact() {
           <input type="hidden" name="form-name" value="contact" />
           <p style={{ display: 'none' }}>
             <label>
-              Don't fill this out if you're human: 
+              Don't fill this out if you're human:
               <input name="bot-field" value={form.botField} onChange={(e) => setForm({ ...form, botField: e.target.value })} />
             </label>
           </p>
@@ -1847,9 +1931,9 @@ function Footer() {
       {/* Infinite Scrolling Top Bar */}
       <div className="footer-ticker">
         <div className="ticker-track">
-           {Array(6).fill("SYSTEMS ONLINE // FULL-STACK DEVELOPER // OPEN TO OPPORTUNITIES // ").map((text, i) => (
-             <span key={i}>{text}</span>
-           ))}
+          {Array(3).fill(SKILLS.join(' ')).map((text, i) => (
+            <span key={i}>{text} ◆ </span>
+          ))}
         </div>
       </div>
 
@@ -1861,7 +1945,7 @@ function Footer() {
                 <path id="circlePath" d="M 100, 100 m -70, 0 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" fill="none" />
                 <text>
                   <textPath href="#circlePath" startOffset="0%">
-                    LET'S BUILD SOMETHING FASCINATING • LET'S BUILD SOMETHING FASCINATING • 
+                    LET'S BUILD SOMETHING FASCINATING • LET'S BUILD SOMETHING FASCINATING •
                   </textPath>
                 </text>
               </svg>
@@ -1887,10 +1971,10 @@ function Footer() {
 
 /* ═══ PIXEL CAT (INTEGRATED RUNNING MASCOT) ═══ */
 const PixelCat = ({ onClick, innerRef, style }) => (
-  <div 
-    className="pixel-cat pixel-cat-running" 
-    onClick={onClick} 
-    ref={innerRef} 
+  <div
+    className="pixel-cat pixel-cat-running"
+    onClick={onClick}
+    ref={innerRef}
     style={style}
     title="Play Retro Cat Game"
     aria-label="Play Retro Cat Game"
@@ -2005,7 +2089,7 @@ export default function App() {
     const x = e.clientX || window.innerWidth / 2;
     const y = e.clientY || window.innerHeight / 2;
     const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
-    
+
     const transition = document.startViewTransition(() => {
       applyTheme();
     });
@@ -2092,7 +2176,7 @@ export default function App() {
           ))}
         </ul>
         <div className="nav-right">
-          <PixelCat 
+          <PixelCat
             innerRef={catRef}
             onClick={handleOpenGame}
             style={{ opacity: showDinoGame ? 0 : 1 }}
@@ -2103,8 +2187,8 @@ export default function App() {
           <Magnetic>
             <button className="nav-cta" onClick={() => scrollTo('contact')}>Contact</button>
           </Magnetic>
-          <button 
-            className={`hamburger${mobileMenuOpen ? ' open' : ''}`} 
+          <button
+            className={`hamburger${mobileMenuOpen ? ' open' : ''}`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -2116,15 +2200,15 @@ export default function App() {
       <SectionTransition zIndex={10} glass={false} entrance={false}>
         <Hero loaded={loaded} themeMode={themeMode} />
       </SectionTransition>
-      
+
       <Marquee />
 
-      <SectionInterstitial 
+      <SectionInterstitial
         mode="scramble"
-        tag="[ SYSTEM INDEX ]" 
-        title="WHO?" 
-        sub="01 — DHRUB KUMAR GARG" 
-        diag="STATUS: READY // DEV MODE" 
+        tag="[ SYSTEM INDEX ]"
+        title="WHO?"
+        sub="01 — DHRUB KUMAR GARG"
+        diag="STATUS: READY // DEV MODE"
       />
       <SectionTransition zIndex={20}>
         <About />
@@ -2132,32 +2216,31 @@ export default function App() {
 
       <WorkSection data={data.projects} />
 
-      <SectionInterstitial 
+      <SectionInterstitial
         mode="curtain"
-        tag="[ EXPERIENCE ]" 
-        title="IMPACT." 
-        sub="03 — DEFENCE & ENTERPRISE" 
-        diag="SECURITY CLEARANCE: ACTIVE" 
+        tag="[ EXPERIENCE ]"
+        title="IMPACT."
+        diag="SECURITY CLEARANCE: ACTIVE"
       />
       <SectionTransition zIndex={40}>
         <Experience data={data.experience} />
       </SectionTransition>
 
-      <SectionInterstitial 
+      <SectionInterstitial
         mode="tunnel"
-        tag="[ MILESTONES ]" 
-        title="PATH." 
-        sub="04 — 2022 TO 2026" 
-        diag="TIMELINE_INDEX: ACTIVE" 
+        tag="[ MILESTONES ]"
+        title="PATH."
+        sub="04 — 2024 TO 2028"
+        diag="TIMELINE_INDEX: ACTIVE"
       />
       <Timeline data={data.timeline} />
 
-      <SectionInterstitial 
+      <SectionInterstitial
         mode="matrix"
-        tag="[ METRICS ]" 
-        title="DATA." 
-        sub="05 — TELEMETRY & REPOS" 
-        diag="API_STATUS: SYNCED" 
+        tag="[ METRICS ]"
+        title="DATA."
+        sub="05 — TELEMETRY & REPOS"
+        diag="API_STATUS: SYNCED"
       />
       <SectionTransition zIndex={60}>
         <Stats themeMode={themeMode} />
@@ -2170,7 +2253,7 @@ export default function App() {
       <SectionTransition zIndex={80}>
         <Contact />
       </SectionTransition>
-      
+
       <Footer scrollTo={scrollTo} />
       {showDinoGame && <DinoGame onClose={() => setShowDinoGame(false)} />}
     </>

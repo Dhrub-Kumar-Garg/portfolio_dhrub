@@ -255,23 +255,44 @@ function Preloader({ onDone }) {
   );
 }
 
-/* ═══ CURSOR ═══ */
+/* ═══ CURSOR (HUD TARGETING RETICLE) ═══ */
 function Cursor() {
   const ref = useRef(null);
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    // Performant GSAP quick setters
+    const xTo = gsap.quickTo(el, "x", { duration: 0.15, ease: "power2.out" });
+    const yTo = gsap.quickTo(el, "y", { duration: 0.15, ease: "power2.out" });
+
+    // Subtle continuous rotation for the targeting ring
+    gsap.to(el.querySelector('.hud-cursor-ring'), {
+      rotation: 360,
+      duration: 20,
+      repeat: -1,
+      ease: "none"
+    });
+
     const move = (e) => {
-      gsap.to(ref.current, { x: e.clientX, y: e.clientY, duration: 0.12, ease: 'power2.out' });
+      xTo(e.clientX);
+      yTo(e.clientY);
     };
+    
     const over = (e) => {
-      if (e.target.closest('a, button, .project-card, .magnetic, .meta-row, .tl-item, .pixel-cat')) setExpanded(true);
+      // Expand on interactive elements
+      if (e.target.closest('a, button, .project-card, .magnetic, .meta-row, .tl-item, .pixel-cat, input, textarea')) {
+        setExpanded(true);
+      }
     };
     const out = () => setExpanded(false);
 
     window.addEventListener('mousemove', move);
     document.addEventListener('mouseover', over);
     document.addEventListener('mouseout', out);
+    
     return () => {
       window.removeEventListener('mousemove', move);
       document.removeEventListener('mouseover', over);
@@ -279,7 +300,19 @@ function Cursor() {
     };
   }, []);
 
-  return <div ref={ref} className={`cursor${expanded ? ' expand' : ''}`} />;
+  return (
+    <div ref={ref} className={`hud-cursor ${expanded ? 'expand' : ''}`}>
+      <div className="hud-cursor-crosshair x" />
+      <div className="hud-cursor-crosshair y" />
+      <div className="hud-cursor-ring">
+        <div className="hud-tick tl" />
+        <div className="hud-tick tr" />
+        <div className="hud-tick bl" />
+        <div className="hud-tick br" />
+      </div>
+      <div className="hud-cursor-dot" />
+    </div>
+  );
 }
 
 /* ═══ SCROLL PROGRESS ═══ */
