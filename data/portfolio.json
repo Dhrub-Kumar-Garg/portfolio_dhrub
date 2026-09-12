@@ -1,0 +1,130 @@
+{
+  "projects": [
+    {
+      "name": "StockWise",
+      "featured": true,
+      "status": "2026",
+      "desc": "Full-stack autonomous algorithmic trading platform that automates trade execution, manages risk, and delivers real-time portfolio insights. Built with Next.js/React dashboard, Node.js backend, and AWS infrastructure for 24/7 operation with minimal manual intervention.",
+      "metrics": [
+        "Autonomous Trading",
+        "Real-time Analytics"
+      ],
+      "stack": [
+        "Next.js",
+        "React",
+        "Node.js",
+        "AWS"
+      ],
+      "links": [
+        {
+          "label": "Live",
+          "url": "https://dhrub-stockwise.duckdns.org/"
+        },
+        {
+          "label": "Code",
+          "url": "https://github.com/Dhrub-Kumar-Garg/stockWiseV2/"
+        }
+      ]
+    },
+    {
+      "name": "Wearable Acoustic Monitor",
+      "featured": true,
+      "status": "2026",
+      "desc": "Patented IoT-based acoustic monitoring & alert system (Indian Patent No. 202641062287). Wearable device with ESP8266 learns user's sound threshold via double-tap calibration, delivers vibration alerts, and sends real-time Telegram Bot notifications to caregivers. Validated over 100+ trials.",
+      "metrics": [
+        "Indian Patent 202641062287",
+        "100+ trials validated"
+      ],
+      "stack": [
+        "ESP8266",
+        "IoT",
+        "C++",
+        "Telegram API"
+      ],
+      "links": [
+        {
+          "label": "Document Of Patent",
+          "url": "https://docs.google.com/document/d/1Lf239VEdHI1mlFwAf1iR3qH5p-2l-If_vWpAXBgdUvQ/edit?usp=sharing"
+        }
+      ]
+    },
+    {
+      "name": "Deep Packet Inspection Engine",
+      "featured": true,
+      "status": "2026",
+      "desc": "High-performance C++ network traffic analysis & filtering system with a custom PCAP parser, 5-tuple flow tracking, and multithreading achieving ~196K packets/sec. TLS/SNI-based classifier identifies 20+ applications across HTTP, HTTPS, DNS, TLS & QUIC. 100% classification accuracy on 231K packets with zero data loss.",
+      "metrics": [
+        "196K packets/sec",
+        "100% accuracy on 231K packets"
+      ],
+      "stack": [
+        "C++",
+        "PCAP",
+        "Multithreading",
+        "TLS/SNI"
+      ],
+      "links": [
+        {
+          "label": "Code",
+          "url": "https://github.com/Dhrub-Kumar-Garg/deep_packet_inspection"
+        }
+      ]
+    },
+    {
+      "name": "portfolio",
+      "featured": true,
+      "status": "2026",
+      "desc": "Personal portfolio website — the site you're viewing right now. Built with React, GSAP scroll animations, Three.js, and a cyberpunk aesthetic.",
+      "metrics": [
+        "GSAP ScrollTrigger",
+        "Kinetic Typography"
+      ],
+      "stack": [
+        "JavaScript",
+        "React",
+        "GSAP",
+        "Three.js"
+      ],
+      "links": [
+        {
+          "label": "Code",
+          "url": "https://github.com/Dhrub-Kumar-Garg"
+        }
+      ]
+    }
+  ],
+  "experience": [],
+  "certifications": [],
+  "timeline": [
+    {
+      "year": "2024",
+      "title": "Started B.Tech IT @ VIT Vellore",
+      "desc": "First lines of code, first projects, first all-nighter. Fell in love with building."
+    },
+    {
+      "year": "2023",
+      "title": "Full-Stack foundations",
+      "desc": "Mastered React, Node.js, and PostgreSQL. Built first production-grade web apps."
+    },
+    {
+      "year": "2024",
+      "title": "Systems & Cloud Engineering",
+      "desc": "Dove into C++ systems programming, AWS infrastructure, and Docker deployments."
+    },
+    {
+      "year": "2025",
+      "title": "StockWise & DPI Engine",
+      "desc": "Built autonomous trading platform and a 196K pps deep packet inspection engine."
+    },
+    {
+      "year": "2026",
+      "title": "Patented IoT Wearable",
+      "desc": "Published Indian Patent 202641062287 — acoustic wearable with real-time alerts."
+    },
+    {
+      "year": "2027",
+      "title": "Next: Full-Stack / Systems Engineer",
+      "desc": "Looking for full-time roles building impactful, scalable real-world products."
+    }
+  ]
+}
