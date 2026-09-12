@@ -1,3 +1,4 @@
+import CRTTerminal from './components/CRTTerminal';
 import React, { useEffect, useRef, useState, useCallback, Suspense } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
@@ -1737,195 +1738,14 @@ function Stats({ themeMode }) {
 }
 
 /* ═══ CRT TERMINAL ═══ */
-function CRTTerminal() {
-  const [lines, setLines] = useState([]);
-  const [input, setInput] = useState('');
-  const [booted, setBooted] = useState(false);
-  const bodyRef = useRef(null);
-  const sectionRef = useRef(null);
-
-  useGSAP(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 70%',
-      once: true,
-      onEnter: () => runBootSequence(),
-    });
-  }, { scope: sectionRef });
-
-  const runBootSequence = () => {
-    const bootLines = [
-      { type: 'ascii', text: ASCII_ART.join('\n') },
-      { type: 'out', text: '' },
-      { type: 'system', text: '> Initializing dhrub.sh v1.0...' },
-      { type: 'system', text: '> Loading modules... ██████████ 100%' },
-      { type: 'system', text: '> System ready.' },
-      { type: 'out', text: '' },
-      { type: 'success', text: 'Welcome. Type "help" to see what I can do.' },
-      { type: 'success', text: 'Try: "about", "skills", "theme light", "theme dark"' },
-    ];
-
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i >= bootLines.length) {
-        clearInterval(interval);
-        setBooted(true);
-        return;
-      }
-      const line = bootLines[i];
-      setLines((prev) => [...prev, line]);
-      i++;
-      if (bodyRef.current) bodyRef.current.scrollTop = 99999;
-    }, 180);
-  };
-
-  const commands = {
-    help: () => [
-      { type: 'out', text: '┌─────────────────────────────────────┐' },
-      { type: 'out', text: '│  COMMANDS                           │' },
-      { type: 'out', text: '├─────────────────────────────────────┤' },
-      { type: 'out', text: '│  about      → Who am I              │' },
-      { type: 'out', text: '│  skills     → Tech stack            │' },
-      { type: 'out', text: '│  projects   → My work               │' },
-      { type: 'out', text: '│  contact    → Reach me              │' },
-      { type: 'out', text: '│  whoami     → Identity              │' },
-      { type: 'out', text: '│  theme <mode> → dark | light        │' },
-      { type: 'out', text: '│  clear      → Clear terminal        │' },
-      { type: 'out', text: '│  neofetch   → System info           │' },
-      { type: 'out', text: '└─────────────────────────────────────┘' },
-    ],
-    about: () => [
-      { type: 'out', text: 'Dhrub Kumar Garg — IT @ VIT Vellore' },
-      { type: 'out', text: 'I build fast, reliable, and user-friendly products.' },
-      { type: 'out', text: 'Currently: B.Tech IT Student & Open Source Contributor' },
-      { type: 'out', text: 'Focus: Full-Stack, System Design, Cloud' },
-    ],
-    skills: () => [
-      { type: 'success', text: '▸ Python  ▸ PyTorch  ▸ TensorFlow  ▸ Transformers' },
-      { type: 'success', text: '▸ Docker  ▸ Kafka    ▸ React       ▸ Node.js' },
-      { type: 'success', text: '▸ OpenCV  ▸ Git      ▸ Linux       ▸ C++' },
-    ],
-    projects: () => [
-      { type: 'out', text: '[01] StockWise — Autonomous Algorithmic Trading Platform' },
-      { type: 'out', text: '[02] Wearable Acoustic Monitor — Indian Patent 202641062287' },
-      { type: 'out', text: '[03] DPI Engine — 196K pps, 100% classification accuracy' },
-    ],
-    contact: () => [
-      { type: 'success', text: 'Email: dhrubkumargarg@gmail.com' },
-      { type: 'success', text: 'GitHub: github.com/Dhrub-Kumar-Garg' },
-      { type: 'success', text: 'LinkedIn: linkedin.com/in/dhrub-kumar-garg' },
-    ],
-    whoami: () => [{ type: 'success', text: 'A curious mind with a GPU and too many tabs open.' }],
-    neofetch: () => [
-      { type: 'ascii', text: ASCII_ART.join('\n') },
-      { type: 'out', text: '' },
-      { type: 'out', text: 'OS: Human v22.0 (Vellore Edition)' },
-      { type: 'out', text: 'Shell: dhrub.sh v1.0' },
-      { type: 'out', text: 'Uptime: ~22 years' },
-      { type: 'out', text: 'CPU: Full-Stack Brain (always context-switching)' },
-      { type: 'out', text: 'GPU: AWS EC2 when needed' },
-      { type: 'out', text: 'Memory: Mostly StackOverflow + docs' },
-      { type: 'out', text: 'Theme: Dark (always)' },
-    ],
-    clear: () => '__CLEAR__',
-  };
-
-  const handleTheme = (arg) => {
-    if (arg === 'light') {
-      document.documentElement.setAttribute('data-theme', 'light');
-      return [{ type: 'success', text: 'Theme switched to Light Mode ☀️' }];
-    } else if (arg === 'dark') {
-      document.documentElement.removeAttribute('data-theme');
-      return [{ type: 'success', text: 'Theme switched to Dark Mode 🌙' }];
-    }
-    return [{ type: 'error', text: `Unknown theme: "${arg}". Try: light, dark` }];
-  };
-
-  const exec = (e) => {
-    if (e.key !== 'Enter' || !input.trim()) return;
-    const raw = input.trim();
-    const [cmd, ...args] = raw.toLowerCase().split(' ');
-    const newLines = [{ type: 'cmd', text: raw }];
-
-    if (cmd === 'theme') {
-      newLines.push(...handleTheme(args[0] || ''));
-    } else if (cmd === 'clear') {
-      setLines([]);
-      setInput('');
-      return;
-    } else {
-      const fn = commands[cmd];
-      if (fn) {
-        const result = fn();
-        if (Array.isArray(result)) newLines.push(...result);
-      } else {
-        newLines.push({ type: 'error', text: `Command not found: "${cmd}". Type "help" for commands.` });
-      }
-    }
-
-    setLines((prev) => [...prev, ...newLines]);
-    setInput('');
-    setTimeout(() => { if (bodyRef.current) bodyRef.current.scrollTop = 99999; }, 50);
-  };
-
-  return (
-    <section className="crt-section" id="terminal" ref={sectionRef}>
-      <div className="crt-wrapper">
-        <div className="terminal-window">
-          <div className="terminal-header">
-            <div className="terminal-buttons">
-              <span className="btn-close" />
-              <span className="btn-min" />
-              <span className="btn-max" />
-            </div>
-            <span className="terminal-title">dhrub.sh — v1.0</span>
-          </div>
-          <div className="terminal-body" ref={bodyRef}>
-            {lines.map((l, i) => {
-              if (!l) return null;
-              return (
-                <div className="term-line" key={i}>
-                  {l.type === 'cmd' && <><span className="prompt">dhrub@portfolio:~$ </span><span className="user">{l.text}</span></>}
-                  {l.type === 'out' && <span>{l.text}</span>}
-                  {l.type === 'system' && <span style={{ color: '#888' }}>{l.text}</span>}
-                  {l.type === 'success' && <span style={{ color: 'var(--cyan)' }}>{l.text}</span>}
-                  {l.type === 'error' && <span style={{ color: '#ff5f56' }}>{l.text}</span>}
-                  {l.type === 'ascii' && <pre style={{ color: 'var(--accent)', fontSize: '11px' }}>{l.text}</pre>}
-                </div>
-              );
-            })}
-            {!booted && lines.length > 0 && <span className="cursor-block">█</span>}
-
-            {booted && (
-              <div className="term-input-line">
-                <span className="prompt">dhrub@portfolio:~$</span>
-                <input
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={exec}
-                  placeholder="type a command..."
-                  autoComplete="off"
-                  spellCheck="false"
-                  autoFocus
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ═══ CONTACT ═══ */
 function Contact() {
   const ref = useRef(null);
-  const [form, setForm] = useState({ botField: '', name: '', email: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState(false);
 
   useGSAP(() => {
     const el = ref.current;
@@ -1944,25 +1764,28 @@ function Contact() {
   const submit = async (e) => {
     e.preventDefault();
     setSending(true);
+    setError(false);
     try {
-      const formData = new URLSearchParams();
-      formData.append('form-name', 'contact');
-      formData.append('bot-field', form.botField);
-      formData.append('name', form.name);
-      formData.append('email', form.email);
-      formData.append('message', form.message);
-
-      const res = await fetch('/', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData.toString(),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          message: form.message,
+        }),
       });
+      
       if (!res.ok) {
         throw new Error('Network response was not ok');
       }
+      
       setSent(true);
-      setForm({ botField: '', name: '', email: '', message: '' });
-    } catch (err) { console.error(err); }
+      setForm({ name: '', email: '', message: '' });
+    } catch (err) { 
+      console.error(err); 
+      setError(true);
+    }
     setSending(false);
   };
 
@@ -1981,35 +1804,35 @@ function Contact() {
             <a href="mailto:dhrubkumargarg@gmail.com">→ dhrubkumargarg@gmail.com</a>
             <a href="https://github.com/Dhrub-Kumar-Garg" target="_blank" rel="noopener noreferrer">→ github.com/Dhrub-Kumar-Garg</a>
             <a href="https://www.linkedin.com/in/dhrub-kumar-garg" target="_blank" rel="noopener noreferrer">→ linkedin.com/in/dhrub-kumar-garg</a>
+            <a href="https://codolio.com/profile/dhruvii" target="_blank" rel="noopener noreferrer">→ codolio.com/profile/dhruvii</a>
           </div>
         </div>
-        <form className="form-stack reveal" name="contact" method="POST" data-netlify="true" onSubmit={submit}>
-          <input type="hidden" name="form-name" value="contact" />
-          <p style={{ display: 'none' }}>
-            <label>
-              Don't fill this out if you're human:
-              <input name="bot-field" value={form.botField} onChange={(e) => setForm({ ...form, botField: e.target.value })} />
-            </label>
-          </p>
+        <form className="form-stack reveal" onSubmit={submit}>
           {sent ? (
             <div style={{ padding: '40px 0', fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--cyan)' }}>
-              Message sent. I'll be in touch. ✓
+              <strong>MESSAGE SENT.</strong><br/>
+              I'll get back to you soon.
+            </div>
+          ) : error ? (
+            <div style={{ padding: '40px 0', fontFamily: 'var(--mono)', fontSize: 14, color: '#ff5f56' }}>
+              <strong>MESSAGE FAILED.</strong><br/>
+              Please try again or email me directly.
             </div>
           ) : (
             <>
               <div className="form-field">
-                <label>Name</label>
-                <input type="text" name="name" placeholder="Your name" value={form.name}
+                <label htmlFor="name-input">Name</label>
+                <input id="name-input" type="text" name="name" placeholder="Your name" value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })} required />
               </div>
               <div className="form-field">
-                <label>Email</label>
-                <input type="email" name="email" placeholder="your@email.com" value={form.email}
+                <label htmlFor="email-input">Email</label>
+                <input id="email-input" type="email" name="email" placeholder="your@email.com" value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })} required />
               </div>
               <div className="form-field">
-                <label>Message</label>
-                <textarea name="message" placeholder="What's on your mind?" value={form.message}
+                <label htmlFor="message-input">Message</label>
+                <textarea id="message-input" name="message" placeholder="What's on your mind?" value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })} required />
               </div>
               <Magnetic>
@@ -2074,8 +1897,9 @@ function Footer() {
           <p>VIT VELLORE // {time ? `${time} IST` : '...'}</p>
         </div>
         <div className="fm-right">
-          <a href="https://github.com/Dhrub-Kumar-Garg" target="_blank" rel="noopener noreferrer">GITHUB</a>
+          <a href="https://codolio.com/profile/dhruvii" target="_blank" rel="noopener noreferrer">CODOLIO</a>
           <a href="https://www.linkedin.com/in/dhrub-kumar-garg" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
+          <a href="https://github.com/Dhrub-Kumar-Garg" target="_blank" rel="noopener noreferrer">GITHUB</a>
         </div>
       </div>
     </footer>
