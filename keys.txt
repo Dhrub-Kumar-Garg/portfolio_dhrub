@@ -1,0 +1,594 @@
+{
+  "status": {
+    "success": true,
+    "code": 200,
+    "message": ""
+  },
+  "data": {
+    "id": 84822,
+    "imageUrl": "https://d2v119jmdj3sxo.cloudfront.net/84822_787679037",
+    "firstName": "Dhrub Kumar",
+    "secondName": "Garg",
+    "profileViews": 29,
+    "profileName": "dhruvii",
+    "userDetails": {
+      "socialLogin": true,
+      "githubProfile": "Dhrub-Kumar-Garg",
+      "userPersonalDetails": {
+        "bio": ".",
+        "country": "India",
+        "college": "",
+        "degree": "Bachelor of Technology",
+        "branch": "Information Technology",
+        "imageUrl": null,
+        "yearOfGraduation": "2028",
+        "jobPreference": 0,
+        "collegeDetails": {
+          "id": "676321c72a7094ce517aca17",
+          "collegeName": "VIT University"
+        }
+      },
+      "socialMediaProfileList": [
+        {
+          "socialMediaPlatform": "linkedIn",
+          "handle": "dhrub-kumar-garg"
+        },
+        {
+          "socialMediaPlatform": "resume",
+          "handle": ""
+        },
+        {
+          "socialMediaPlatform": "twitter",
+          "handle": ""
+        },
+        {
+          "socialMediaPlatform": "website",
+          "handle": ""
+        }
+      ]
+    },
+    "platformProfiles": {
+      "platformProfiles": [
+        {
+          "platform": "leetcode",
+          "userStats": {
+            "stars": null,
+            "currentRating": 1433,
+            "maxRating": 1436,
+            "rank": null,
+            "maxRank": "606649",
+            "titlePhoto": "https://assets.leetcode.com/users/DhruvJod/avatar_1779011752.png",
+            "handle": "DhruvJod",
+            "university": null,
+            "contestBadgeName": null,
+            "languageList": [
+              "C++",
+              "Java",
+              "Oracle"
+            ],
+            "level": null,
+            "userLevelName": null,
+            "dsaRating": null,
+            "maxDsaRating": null
+          },
+          "badgeStats": {
+            "error": null,
+            "badgeList": [
+              {
+                "name": "Annual Badge",
+                "shortName": "50 Days Badge 2026",
+                "displayName": "50 Days Badge 2026",
+                "hoverText": "50 Days Badge 2026",
+                "creationDate": 1783728000,
+                "category": "ANNUAL",
+                "icon": "https://assets.leetcode.com/static_assets/others/50_1080_1080.png",
+                "stars": null
+              }
+            ]
+          },
+          "platformDetails": {
+            "types": [
+              "CP",
+              "DSA"
+            ]
+          },
+          "topicAnalysisStats": {
+            "topicWiseDistribution": {
+              "Enumeration": 1,
+              "Two Pointers": 20,
+              "String": 29,
+              "Queue and Stacks": 2,
+              "Binary Search": 22,
+              "Recursion": 4,
+              "Math": 29,
+              "Sorting": 14,
+              "Game Theory": 1,
+              "Design": 2,
+              "Backtracking": 1,
+              "Greedy Algorithms": 5,
+              "Matrix": 6,
+              "Simulation": 9,
+              "Dynamic Programming": 8,
+              "Bit Manipulation": 9,
+              "Divide and Conquer": 4,
+              "Monotonic Stack": 5,
+              "Database": 11,
+              "Linked Lists": 9,
+              "HashMap and Set": 20,
+              "Arrays": 66,
+              "Trie": 1
+            }
+          },
+          "totalQuestionStats": {
+            "totalQuestionCounts": 140,
+            "easyQuestionCounts": 84,
+            "mediumQuestionCounts": 54,
+            "hardQuestionCounts": 2,
+            "basicQuestionCounts": null,
+            "schoolQuestionCounts": null,
+            "error": null
+          },
+          "contestActivityStats": {
+            "contestActivityList": [
+              {
+                "contestName": "Weekly Contest 467",
+                "rating": 1436,
+                "contestDate": 1757817000,
+                "rank": 20618
+              },
+              {
+                "contestName": "Biweekly Contest 185",
+                "rating": 1428,
+                "contestDate": 1781965800,
+                "rank": 14267
+              },
+              {
+                "contestName": "Weekly Contest 518",
+                "rating": 1433,
+                "contestDate": 1788661800,
+                "rank": 11589
+              }
+            ],
+            "dsaContestActivityList": null
+          },
+          "dailyActivityStatsResponse": {
+            "activeYears": [
+              2025,
+              2026
+            ],
+            "submissionCalendar": {
+              "1747958400": 5,
+              "1754784000": 1,
+              "1757635200": 2,
+              "1757721600": 4,
+              "1757808000": 5,
+              "1757894400": 1,
+              "1761091200": 1,
+              "1761177600": 1,
+              "1765152000": 5,
+              "1766880000": 1,
+              "1766966400": 3,
+              "1767052800": 2,
+              "1767571200": 2,
+              "1774569600": 2,
+              "1774656000": 10,
+              "1774742400": 4,
+              "1774828800": 2,
+              "1774915200": 9,
+              "1775001600": 1,
+              "1775174400": 1,
+              "1778630400": 5,
+              "1778716800": 5,
+              "1778803200": 1,
+              "1778976000": 2,
+              "1780185600": 6,
+              "1780272000": 8,
+              "1780358400": 13,
+              "1780444800": 22,
+              "1780531200": 6,
+              "1780617600": 3,
+              "1780704000": 3,
+              "1780790400": 2,
+              "1780876800": 4,
+              "1780963200": 6,
+              "1781049600": 1,
+              "1781136000": 10,
+              "1781222400": 4,
+              "1781308800": 11,
+              "1781395200": 2,
+              "1781481600": 10,
+              "1781568000": 2,
+              "1781654400": 7,
+              "1781740800": 1,
+              "1781827200": 5,
+              "1781913600": 3,
+              "1782000000": 6,
+              "1782086400": 7,
+              "1782172800": 7,
+              "1782259200": 1,
+              "1782345600": 1,
+              "1782432000": 1,
+              "1782518400": 1,
+              "1782604800": 1,
+              "1782691200": 3,
+              "1782777600": 2,
+              "1782864000": 1,
+              "1782950400": 1,
+              "1783382400": 1,
+              "1783468800": 1,
+              "1783555200": 2,
+              "1783641600": 3,
+              "1783728000": 7,
+              "1783814400": 15,
+              "1783900800": 1,
+              "1784073600": 5,
+              "1784160000": 4,
+              "1784505600": 1,
+              "1784592000": 1,
+              "1784937600": 3,
+              "1785024000": 11,
+              "1785110400": 5,
+              "1785196800": 6,
+              "1785283200": 2,
+              "1785369600": 2,
+              "1786924800": 3,
+              "1787097600": 3,
+              "1787184000": 4,
+              "1787356800": 10,
+              "1787443200": 7,
+              "1787616000": 3,
+              "1787702400": 3,
+              "1787788800": 9,
+              "1787875200": 1,
+              "1787961600": 7,
+              "1788048000": 3,
+              "1788134400": 4,
+              "1788307200": 6,
+              "1788393600": 8,
+              "1788480000": 2,
+              "1788566400": 11,
+              "1788652800": 6,
+              "1788739200": 3,
+              "1788825600": 1,
+              "1788912000": 5,
+              "1788998400": 2,
+              "1789084800": 4
+            },
+            "maxStreak": 33,
+            "totalActiveDays": 84,
+            "error": null,
+            "timestamp": 683637883,
+            "ratingWiseDistribution": null,
+            "topicWiseDistribution": null
+          },
+          "certificateStats": null,
+          "lastUpdatedAt": 431660381,
+          "categoryQuestionStats": null,
+          "isVerified": true,
+          "sheetProgress": null
+        },
+        {
+          "platform": "codeforces",
+          "userStats": {
+            "stars": null,
+            "currentRating": 368,
+            "maxRating": 368,
+            "rank": "newbie",
+            "maxRank": "newbie",
+            "titlePhoto": "https://userpic.codeforces.org/no-title.jpg",
+            "handle": "Dhrub_Kumar_Garg",
+            "university": null,
+            "contestBadgeName": null,
+            "languageList": null,
+            "level": null,
+            "userLevelName": null,
+            "dsaRating": null,
+            "maxDsaRating": null
+          },
+          "badgeStats": null,
+          "platformDetails": {
+            "types": [
+              "CP"
+            ]
+          },
+          "topicAnalysisStats": null,
+          "totalQuestionStats": {
+            "totalQuestionCounts": 18,
+            "easyQuestionCounts": null,
+            "mediumQuestionCounts": null,
+            "hardQuestionCounts": null,
+            "basicQuestionCounts": null,
+            "schoolQuestionCounts": null,
+            "error": null
+          },
+          "contestActivityStats": {
+            "contestActivityList": [
+              {
+                "contestName": "Codeforces Round 1050 (Div. 4)",
+                "rating": 368,
+                "contestDate": 1757782200,
+                "rank": 17429
+              }
+            ],
+            "dsaContestActivityList": null
+          },
+          "dailyActivityStatsResponse": {
+            "activeYears": null,
+            "submissionCalendar": {
+              "1734480000": 1,
+              "1734566400": 3,
+              "1734652800": 1,
+              "1748304000": 1,
+              "1748390400": 4,
+              "1757635200": 1,
+              "1757721600": 1,
+              "1760918400": 5,
+              "1767571200": 2,
+              "1767744000": 1,
+              "1767916800": 2,
+              "1768003200": 3,
+              "1768089600": 2,
+              "1768176000": 2,
+              "1778889600": 2,
+              "1778976000": 2
+            },
+            "maxStreak": 4,
+            "totalActiveDays": null,
+            "error": null,
+            "timestamp": null,
+            "ratingWiseDistribution": {
+              "800": 16,
+              "1000": 1,
+              "1200": 1
+            },
+            "topicWiseDistribution": {
+              "brute force": 4,
+              "strings": 2,
+              "expression parsing": 1,
+              "implementation": 9,
+              "hashing": 1,
+              "games": 2,
+              "sortings": 1,
+              "greedy": 5,
+              "math": 8,
+              "number theory": 1
+            }
+          },
+          "certificateStats": null,
+          "lastUpdatedAt": 360803597,
+          "categoryQuestionStats": null,
+          "isVerified": true,
+          "sheetProgress": null
+        },
+        {
+          "platform": "codestudio",
+          "userStats": {
+            "stars": null,
+            "currentRating": null,
+            "maxRating": 0,
+            "rank": null,
+            "maxRank": "Beginner",
+            "titlePhoto": "https://files.codingninjas.in/active_-badges_-contest-rating-2-1717001720.png",
+            "handle": "ee76dee1-20c9-435c-b6ed-e38db8357ee0",
+            "university": null,
+            "contestBadgeName": null,
+            "languageList": null,
+            "level": 2,
+            "userLevelName": "Genius",
+            "dsaRating": null,
+            "maxDsaRating": null
+          },
+          "badgeStats": {
+            "error": false,
+            "badgeList": []
+          },
+          "platformDetails": {
+            "types": [
+              "DSA",
+              "CP"
+            ]
+          },
+          "topicAnalysisStats": null,
+          "totalQuestionStats": {
+            "totalQuestionCounts": 4,
+            "easyQuestionCounts": 4,
+            "mediumQuestionCounts": 0,
+            "hardQuestionCounts": 0,
+            "basicQuestionCounts": null,
+            "schoolQuestionCounts": null,
+            "error": false
+          },
+          "contestActivityStats": {
+            "contestActivityList": [],
+            "dsaContestActivityList": null
+          },
+          "dailyActivityStatsResponse": {
+            "activeYears": null,
+            "submissionCalendar": {
+              "1765929600": 1,
+              "1766016000": 1,
+              "1766102400": 1,
+              "1766793600": 1,
+              "1766880000": 1,
+              "1766966400": 1,
+              "1781136000": 1
+            },
+            "maxStreak": 3,
+            "totalActiveDays": null,
+            "error": null,
+            "timestamp": null,
+            "ratingWiseDistribution": null,
+            "topicWiseDistribution": null
+          },
+          "certificateStats": null,
+          "lastUpdatedAt": 305534676,
+          "categoryQuestionStats": null,
+          "isVerified": true,
+          "sheetProgress": null
+        },
+        {
+          "platform": "geeksforgeeks",
+          "userStats": {
+            "stars": null,
+            "currentRating": null,
+            "maxRating": null,
+            "rank": null,
+            "maxRank": null,
+            "titlePhoto": "https://media.geeksforgeeks.org/img-practice/user_web-1598433228.svg",
+            "handle": "dhrubkum8ztc",
+            "university": "Vellore Institute of Technology (VIT University)",
+            "contestBadgeName": null,
+            "languageList": null,
+            "level": null,
+            "userLevelName": null,
+            "dsaRating": null,
+            "maxDsaRating": null
+          },
+          "badgeStats": null,
+          "platformDetails": {
+            "types": [
+              "CP",
+              "DSA"
+            ]
+          },
+          "topicAnalysisStats": {
+            "topicWiseDistribution": {
+              "Bit Magic": 2,
+              "Mathematical": 5,
+              "STL": 1,
+              "Queue and Stacks": 3,
+              "Binary Search": 2,
+              "Recursion": 2,
+              "two-pointer-algorithm": 1,
+              "Sorting": 1,
+              "Algorithms": 13,
+              "Prime Number": 1,
+              "Searching": 5,
+              "constructive algo": 1,
+              "Divide and Conquer": 1,
+              "Linked Lists": 1,
+              "HashMap and Set": 1,
+              "Arrays": 14,
+              "permutation": 1
+            }
+          },
+          "totalQuestionStats": {
+            "totalQuestionCounts": 30,
+            "easyQuestionCounts": 15,
+            "mediumQuestionCounts": 11,
+            "hardQuestionCounts": 0,
+            "basicQuestionCounts": 4,
+            "schoolQuestionCounts": 0,
+            "error": null
+          },
+          "contestActivityStats": null,
+          "dailyActivityStatsResponse": {
+            "activeYears": null,
+            "submissionCalendar": {
+              "1743120000": 1,
+              "1743206400": 1,
+              "1743292800": 1,
+              "1743379200": 1,
+              "1743465600": 1,
+              "1743552000": 1,
+              "1743638400": 1,
+              "1780099200": 1,
+              "1780185600": 5,
+              "1780358400": 4,
+              "1780444800": 1,
+              "1780531200": 2,
+              "1780790400": 1,
+              "1781308800": 1,
+              "1781654400": 1,
+              "1782950400": 1,
+              "1783468800": 1,
+              "1783728000": 3,
+              "1785369600": 1,
+              "1787616000": 1,
+              "1788566400": 1,
+              "1788998400": 2
+            },
+            "maxStreak": 7,
+            "totalActiveDays": null,
+            "error": null,
+            "timestamp": null,
+            "ratingWiseDistribution": null,
+            "topicWiseDistribution": null
+          },
+          "certificateStats": null,
+          "lastUpdatedAt": 85519681,
+          "categoryQuestionStats": null,
+          "isVerified": true,
+          "sheetProgress": null
+        },
+        {
+          "platform": "codechef",
+          "userStats": {
+            "stars": 1,
+            "currentRating": 1029,
+            "maxRating": 1029,
+            "rank": null,
+            "maxRank": null,
+            "titlePhoto": null,
+            "handle": "dhrubgarg",
+            "university": null,
+            "contestBadgeName": null,
+            "languageList": null,
+            "level": null,
+            "userLevelName": null,
+            "dsaRating": null,
+            "maxDsaRating": 0
+          },
+          "badgeStats": {
+            "error": null,
+            "badgeList": []
+          },
+          "platformDetails": {
+            "types": [
+              "CP"
+            ]
+          },
+          "topicAnalysisStats": null,
+          "totalQuestionStats": {
+            "totalQuestionCounts": 5,
+            "easyQuestionCounts": null,
+            "mediumQuestionCounts": null,
+            "hardQuestionCounts": null,
+            "basicQuestionCounts": null,
+            "schoolQuestionCounts": null,
+            "error": null
+          },
+          "contestActivityStats": {
+            "contestActivityList": [
+              {
+                "contestName": "Starters 255",
+                "rating": 1029,
+                "contestDate": 1788912000,
+                "rank": 10084
+              }
+            ],
+            "dsaContestActivityList": null
+          },
+          "dailyActivityStatsResponse": {
+            "activeYears": null,
+            "submissionCalendar": {
+              "1788739200": 3,
+              "1788912000": 12
+            },
+            "maxStreak": null,
+            "totalActiveDays": null,
+            "error": null,
+            "timestamp": null,
+            "ratingWiseDistribution": null,
+            "topicWiseDistribution": null
+          },
+          "certificateStats": null,
+          "lastUpdatedAt": 918323098,
+          "categoryQuestionStats": null,
+          "isVerified": true,
+          "sheetProgress": null
+        }
+      ]
+    }
+  }
+}

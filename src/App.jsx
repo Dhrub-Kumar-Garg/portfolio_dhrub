@@ -1489,11 +1489,53 @@ function Timeline({ data }) {
   );
 }
 
+/* ═══ HEATMAP COMPONENT ═══ */
+function HeatmapGrid({ activity }) {
+  if (!activity || !activity.length) return null;
+  
+  // activity is sorted from newest to oldest by api, but we want oldest to newest for the grid
+  const sorted = [...activity].reverse();
+
+  return (
+    <div className="heatmap-container" style={{
+      display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '2rem', marginBottom: '2rem', overflowX: 'auto', paddingBottom: '0.5rem'
+    }}>
+      <div style={{ display: 'grid', gridTemplateRows: 'repeat(7, 1fr)', gridAutoFlow: 'column', gap: '4px', minWidth: 'max-content' }}>
+        {sorted.map((day, i) => {
+          let color = 'rgba(255,255,255,0.05)';
+          if (day.intensity === 1) color = '#0e4429';
+          else if (day.intensity === 2) color = '#006d32';
+          else if (day.intensity === 3) color = '#26a641';
+          else if (day.intensity === 4) color = '#39d353';
+          
+          return (
+            <div 
+              key={day.date} 
+              style={{ width: '12px', height: '12px', backgroundColor: color, borderRadius: '2px' }}
+              title={`${day.date}: ${day.count} submissions`}
+            />
+          );
+        })}
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', color: 'var(--dim)', fontFamily: 'var(--font-mono)' }}>
+        <span>Less</span>
+        <div style={{ display: 'flex', gap: '4px' }}>
+          {['rgba(255,255,255,0.05)', '#0e4429', '#006d32', '#26a641', '#39d353'].map(c => (
+            <div key={c} style={{ width: '12px', height: '12px', backgroundColor: c, borderRadius: '2px' }} />
+          ))}
+        </div>
+        <span>More</span>
+      </div>
+    </div>
+  );
+}
+
 /* ═══ STATS ═══ */
 function Stats({ themeMode }) {
   const ref = useRef(null);
   const [codolioStats, setCodolioStats] = useState(null);
   const [syncTime, setSyncTime] = useState(null);
+  const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
     fetch('/api/codolio')
@@ -1509,19 +1551,13 @@ function Stats({ themeMode }) {
             day: '2-digit', month: 'short', year: 'numeric'
           }).toUpperCase() + ' ' + d.toLocaleTimeString('en-GB', {
             hour: '2-digit', minute: '2-digit', hour12: false
-          }) + ' IST'; // Note: Assuming IST display as requested
+          }) + ' IST';
           setSyncTime(formatted);
         }
       })
       .catch(err => {
-        console.warn("Falling back to cached Codolio stats (API unavailable)", err);
-        setCodolioStats({
-          questionsSolved: 197,
-          activeDays: 120,
-          maxStreak: 14,
-          currentStreak: 3
-        });
-        setSyncTime('12 SEP 2026 19:20 IST');
+        console.error("Failed to load live Codolio stats", err);
+        setApiError(true);
       });
   }, []);
 
@@ -1564,60 +1600,137 @@ function Stats({ themeMode }) {
     <section className="sect sect-stats" id="stats" ref={ref}>
       <p className="sect-label">05 — STATS</p>
       <h2 className="sect-heading">Engineering <em className="serif">Metrics.</em></h2>
-      <div className="stats-row">
-        {codolioStats ? [
-          [codolioStats.questionsSolved.toString(), 'QUESTIONS SOLVED'],
-          [codolioStats.activeDays.toString(), 'ACTIVE DAYS'],
-          [codolioStats.maxStreak.toString(), 'MAX STREAK'],
-        ].map(([n, l]) => (
-          <div className="stat-cell" key={l}>
-            <div className="stat-number" data-value={n}>0</div>
-            <div className="stat-label">{l}</div>
-          </div>
-        )) : (
-          <div className="stat-cell loading">
-            <div className="stat-number" style={{ opacity: 0.5, animation: 'pulse 1.5s infinite' }}>---</div>
-            <div className="stat-label" style={{ opacity: 0.5 }}>SYNCING METRICS...</div>
-          </div>
-        )}
-      </div>
-
-      {codolioStats && (
-        <div className="codolio-panel" style={{ 
-          marginTop: '4rem', 
-          padding: '2rem', 
-          border: '1px solid var(--border)', 
-          background: 'rgba(255, 255, 255, 0.02)',
-          borderRadius: '8px' 
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-            <div>
-              <span className="label" style={{ display: 'block', fontSize: '1rem', marginBottom: '0.25rem' }}>Problem Solving Activity</span>
-              <span style={{ color: 'var(--dim)', fontSize: '0.85rem' }}>Dynamic Streak Analytics</span>
-            </div>
-            {syncTime && (
-              <div style={{ fontSize: '0.75rem', letterSpacing: '0.1em', opacity: 0.6, fontFamily: 'var(--font-mono)' }}>
-                LAST SYNCED · {syncTime}
+      
+      {apiError ? (
+        <div style={{ padding: '3rem', border: '1px solid rgba(255,0,0,0.2)', background: 'rgba(255,0,0,0.05)', borderRadius: '8px', textAlign: 'center', color: 'var(--dim)' }}>
+          <p style={{ fontFamily: 'var(--font-mono)' }}>ERR: TELEMETRY_UNAVAILABLE</p>
+          <p>Failed to establish connection to Codolio network.</p>
+        </div>
+      ) : (
+        <>
+          <div className="stats-row">
+            {codolioStats ? [
+              [codolioStats.questionsSolved.toString(), 'QUESTIONS SOLVED'],
+              [codolioStats.activeDays.toString(), 'ACTIVE DAYS'],
+              [codolioStats.maxStreak.toString(), 'MAX STREAK'],
+            ].map(([n, l]) => (
+              <div className="stat-cell" key={l}>
+                <div className="stat-number" data-value={n}>0</div>
+                <div className="stat-label">{l}</div>
+              </div>
+            )) : (
+              <div className="stat-cell loading">
+                <div className="stat-number" style={{ opacity: 0.5, animation: 'pulse 1.5s infinite' }}>---</div>
+                <div className="stat-label" style={{ opacity: 0.5 }}>SYNCING TELEMETRY...</div>
               </div>
             )}
           </div>
-          
-          <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-            <div style={{ flex: 1, minWidth: '150px' }}>
-              <div style={{ fontSize: '2.5rem', fontWeight: 600, color: 'var(--accent)' }}>
-                {codolioStats.currentStreak} <span style={{ fontSize: '1rem', color: 'var(--text)', fontWeight: 400 }}>Days</span>
+
+          {codolioStats && (
+            <div className="codolio-panel" style={{ 
+              marginTop: '4rem', 
+              padding: '2rem', 
+              border: '1px solid var(--border)', 
+              background: 'rgba(255, 255, 255, 0.02)',
+              borderRadius: '8px',
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+                <div>
+                  <span className="label" style={{ display: 'block', fontSize: '1rem', marginBottom: '0.25rem', color: 'var(--text)' }}>Problem Solving Activity</span>
+                  <span style={{ color: 'var(--dim)', fontSize: '0.85rem' }}>Last 6 Months</span>
+                </div>
+                {syncTime && (
+                  <div style={{ fontSize: '0.75rem', letterSpacing: '0.1em', opacity: 0.6, fontFamily: 'var(--font-mono)' }}>
+                    LAST SYNCED · {syncTime}
+                  </div>
+                )}
               </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--dim)', marginTop: '0.25rem' }}>Current Active Streak</div>
-            </div>
-            
-            <div style={{ flex: 1, minWidth: '150px' }}>
-              <div style={{ fontSize: '2.5rem', fontWeight: 600 }}>
-                {codolioStats.maxStreak} <span style={{ fontSize: '1rem', color: 'var(--dim)', fontWeight: 400 }}>Days</span>
+              
+              <HeatmapGrid activity={codolioStats.activity} />
+              
+              <div style={{ display: 'flex', gap: '3rem', flexWrap: 'wrap', marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '2rem' }}>
+                <div style={{ flex: 1, minWidth: '120px' }}>
+                  <div style={{ fontSize: '2rem', fontWeight: 600, color: 'var(--accent)' }}>
+                    {codolioStats.currentStreak} <span style={{ fontSize: '0.85rem', color: 'var(--text)', fontWeight: 400 }}>Days</span>
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--dim)', marginTop: '0.25rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.05em' }}>CURRENT STREAK</div>
+                </div>
+                
+                <div style={{ flex: 1, minWidth: '120px' }}>
+                  <div style={{ fontSize: '2rem', fontWeight: 600 }}>
+                    {codolioStats.maxStreak} <span style={{ fontSize: '0.85rem', color: 'var(--dim)', fontWeight: 400 }}>Days</span>
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--dim)', marginTop: '0.25rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.05em' }}>ALL-TIME MAX STREAK</div>
+                </div>
+                
+                <div style={{ flex: 1, minWidth: '120px' }}>
+                  <div style={{ fontSize: '2rem', fontWeight: 600 }}>
+                    {codolioStats.submissions}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--dim)', marginTop: '0.25rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.05em' }}>TOTAL SUBMISSIONS</div>
+                </div>
               </div>
-              <div style={{ fontSize: '0.85rem', color: 'var(--dim)', marginTop: '0.25rem' }}>All-Time Max Streak</div>
             </div>
-          </div>
-        </div>
+          )}
+
+          {codolioStats && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginTop: '2rem' }}>
+              {/* COMPETITIVE PROGRAMMING PANEL */}
+              <div style={{ padding: '2rem', border: '1px solid var(--border)', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px' }}>
+                <div style={{ fontSize: '1rem', color: 'var(--text)', marginBottom: '1.5rem', fontWeight: 500 }}>Competitive Programming</div>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem', marginBottom: '2rem' }}>
+                  <div style={{ fontSize: '3rem', fontWeight: 600, color: 'var(--accent)', lineHeight: 1 }}>{codolioStats.currentRating}</div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--dim)', paddingBottom: '0.4rem', fontFamily: 'var(--font-mono)' }}>MAX RATING</div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <span style={{ color: 'var(--dim)' }}>Contests Attended</span>
+                    <span>{codolioStats.contestsAttended}</span>
+                  </div>
+                  {Object.entries(codolioStats.platforms || {}).map(([plat, count]) => count > 0 && (
+                    <div key={plat} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                      <span style={{ color: 'var(--dim)', textTransform: 'capitalize' }}>{plat}</span>
+                      <span>{count}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* DSA DISTRIBUTION PANEL */}
+              <div style={{ padding: '2rem', border: '1px solid var(--border)', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '8px' }}>
+                <div style={{ fontSize: '1rem', color: 'var(--text)', marginBottom: '1.5rem', fontWeight: 500 }}>DSA Distribution</div>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: '1rem', marginBottom: '2rem' }}>
+                  <div style={{ fontSize: '3rem', fontWeight: 600, lineHeight: 1 }}>{codolioStats.dsa?.total || 0}</div>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--dim)', paddingBottom: '0.4rem', fontFamily: 'var(--font-mono)' }}>TOTAL SOLVED</div>
+                </div>
+                
+                {/* Segmented Bar */}
+                <div style={{ display: 'flex', height: '6px', borderRadius: '3px', overflow: 'hidden', marginBottom: '1.5rem', background: 'rgba(255,255,255,0.1)' }}>
+                  <div style={{ width: `${((codolioStats.dsa?.easy || 0) / Math.max(codolioStats.dsa?.total || 1, 1)) * 100}%`, background: '#26a641' }} />
+                  <div style={{ width: `${((codolioStats.dsa?.medium || 0) / Math.max(codolioStats.dsa?.total || 1, 1)) * 100}%`, background: '#fb8500' }} />
+                  <div style={{ width: `${((codolioStats.dsa?.hard || 0) / Math.max(codolioStats.dsa?.total || 1, 1)) * 100}%`, background: '#e63946' }} />
+                </div>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <span style={{ color: 'var(--dim)' }}><span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#26a641', marginRight: '8px' }}></span>Easy</span>
+                    <span>{codolioStats.dsa?.easy || 0}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <span style={{ color: 'var(--dim)' }}><span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#fb8500', marginRight: '8px' }}></span>Medium</span>
+                    <span>{codolioStats.dsa?.medium || 0}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <span style={{ color: 'var(--dim)' }}><span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#e63946', marginRight: '8px' }}></span>Hard</span>
+                    <span>{codolioStats.dsa?.hard || 0}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </section>
   );
