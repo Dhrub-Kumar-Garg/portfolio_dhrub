@@ -1493,8 +1493,8 @@ function Timeline({ data }) {
 function HeatmapGrid({ activity }) {
   if (!activity || !activity.length) return null;
   
-  // activity is sorted from newest to oldest by api, but we want oldest to newest for the grid
-  const sorted = [...activity].reverse();
+  // activity is correctly ordered oldest -> newest by the API
+  const sorted = activity;
 
   return (
     <div className="heatmap-container" style={{

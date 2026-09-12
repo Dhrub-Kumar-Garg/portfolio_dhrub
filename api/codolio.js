@@ -79,11 +79,12 @@ export default async function handler(req, res) {
           const ts = parseInt(timestamp, 10);
           if (isNaN(ts) || ts < 10000000) continue; 
           
+          // Force formatting into IST (Asia/Kolkata)
           const d = new Date(ts * 1000); 
-          const yyyy = d.getFullYear();
-          const mm = String(d.getMonth() + 1).padStart(2, '0');
-          const dd = String(d.getDate()).padStart(2, '0');
-          const dateStr = `${yyyy}-${mm}-${dd}`;
+          const options = { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' };
+          // Returns MM/DD/YYYY in some environments, let's parse safely:
+          const formatter = new Intl.DateTimeFormat('en-CA', options); // en-CA gives YYYY-MM-DD
+          const dateStr = formatter.format(d); // e.g. "2026-09-12"
           
           calendarMap[dateStr] = (calendarMap[dateStr] || 0) + count;
         }
@@ -122,36 +123,30 @@ export default async function handler(req, res) {
       if (tempStreak > maxStreakCalc) maxStreakCalc = tempStreak;
     }
 
-    // Compute current streak (walking backwards from today/yesterday)
-    let checkDate = new Date(today);
-    let yyyy = checkDate.getFullYear();
-    let mm = String(checkDate.getMonth() + 1).padStart(2, '0');
-    let dd = String(checkDate.getDate()).padStart(2, '0');
+    // Compute current streak
+    let checkDate = new Date();
+    const dtOptions = { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit' };
+    const dtFormatter = new Intl.DateTimeFormat('en-CA', dtOptions);
+    let checkDateStr = dtFormatter.format(checkDate);
     
     // if today is 0, maybe streak is just from yesterday
-    if (!calendarMap[`${yyyy}-${mm}-${dd}`]) {
+    if (!calendarMap[checkDateStr]) {
       checkDate.setDate(checkDate.getDate() - 1);
-      yyyy = checkDate.getFullYear();
-      mm = String(checkDate.getMonth() + 1).padStart(2, '0');
-      dd = String(checkDate.getDate()).padStart(2, '0');
+      checkDateStr = dtFormatter.format(checkDate);
     }
     
-    while (calendarMap[`${yyyy}-${mm}-${dd}`]) {
+    while (calendarMap[checkDateStr]) {
       currentStreakCalc++;
       checkDate.setDate(checkDate.getDate() - 1);
-      yyyy = checkDate.getFullYear();
-      mm = String(checkDate.getMonth() + 1).padStart(2, '0');
-      dd = String(checkDate.getDate()).padStart(2, '0');
+      checkDateStr = dtFormatter.format(checkDate);
     }
 
     let totalSubmissions = 0;
+    const baseDate = new Date();
     for (let i = 181; i >= 0; i--) {
-      const d = new Date(today);
+      const d = new Date(baseDate);
       d.setDate(d.getDate() - i);
-      const yyyyStr = d.getFullYear();
-      const mmStr = String(d.getMonth() + 1).padStart(2, '0');
-      const ddStr = String(d.getDate()).padStart(2, '0');
-      const dateStr = `${yyyyStr}-${mmStr}-${ddStr}`;
+      const dateStr = dtFormatter.format(d);
       
       const count = calendarMap[dateStr] || 0;
       totalSubmissions += count;
