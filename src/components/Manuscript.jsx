@@ -183,7 +183,7 @@ function Timeline({ data }) {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
-        start: 'top top',
+        start: () => `top top+=${document.querySelector('.nav')?.offsetHeight || 80}`,
         end: '+=2500vh',
         pin: true,
         scrub: 0.6,
