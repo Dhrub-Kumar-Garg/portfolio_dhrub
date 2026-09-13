@@ -730,11 +730,11 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 }
 
 /* Positions for entries on pages - 0 overlap, clean proportion */
-.entry-2023 { top: 40px; left: 40px; --rot: -1deg; }
-.entry-2024 { top: 420px; left: 40px; --rot: 1deg; }
-.entry-2025 { top: 30px; right: 40px; --rot: 1.5deg; }
-.entry-2026 { top: 270px; right: 40px; --rot: -1deg; }
-.entry-2027 { top: 510px; right: 40px; width: 82%; --rot: 0.5deg; }
+.entry-2023 { top: 5%; left: 5%; --rot: -1deg; }
+.entry-2024 { top: 50%; left: 5%; --rot: 1deg; }
+.entry-2025 { top: 4%; right: 5%; --rot: 1.5deg; }
+.entry-2026 { top: 34%; right: 5%; --rot: -1deg; }
+.entry-2027 { top: 66%; right: 5%; width: 82%; --rot: 0.5deg; }
 
 /* Entry Header Typography */
 .entry-head {
