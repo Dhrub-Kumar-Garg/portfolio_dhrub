@@ -603,8 +603,8 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
 /* The Grand Open Manuscript Book (Full Viewport Dimensions) */
 .manuscript-book {
   position: relative;
-  width: min(1400px, 94vw);
-  height: min(850px, 86vh);
+  width: min(1300px, 90vw);
+  height: min(800px, 70vh);
   display: grid;
   grid-template-columns: 1fr 1fr;
   background: #000;
